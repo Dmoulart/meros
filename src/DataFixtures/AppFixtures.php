@@ -27,8 +27,12 @@ class AppFixtures extends Fixture
         $admin
             ->setPassword($hashedPassword)
             ->setRoles(['ROLE_USER','ROLE_ADMIN'])
-            // ->setAlias('alpha')
+            ->setPseudo('Rick')
             ->setEmail('dorian.moulart@gmail.com')
+            ->setNames('Dorian Moulart')
+            ->setEstimatedMileage(2000)
+            ->setCurrentMileage(450)
+            ->setShare(500)
         ;
 
         $manager->persist($admin);
@@ -36,11 +40,28 @@ class AppFixtures extends Fixture
         for($i = 0;$i < 10;$i ++){
             $user = new User;
             $hashedPassword = $this->hasher->hashPassword($user,'123456');
+
+            // A user can be two or more persons.
+            $names = rand(0,1) > 0 ?
+                $generator->firstName.' '.$generator->lastName
+                :
+                $generator->firstName.' '.$generator->lastName
+                .' '.$generator->firstName.' '.$generator->lastName;
+
+            $pseudo = rand(0,1) > 0 ? $generator->userName : null;
+            $estimatedMileage = rand(500,2000);
+            $currentMileage = rand(0,$estimatedMileage);
+            $share = rand(1,10) * 100;
+
             $user
                 ->setEmail($generator->email)
-                // ->setAlias($generator->userName)
                 ->setPassword($hashedPassword)
                 ->setRoles(['ROLE_USER'])
+                ->setNames($names)
+                ->setPseudo($pseudo)
+                ->setEstimatedMileage($estimatedMileage)
+                ->setCurrentMileage($currentMileage)
+                ->setShare($share)
             ;
             $manager->persist($user);
         }

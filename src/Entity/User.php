@@ -36,6 +36,31 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     private $password;
 
+    /**
+     * @ORM\Column(type="string", length=255)
+     */
+    private $names;
+
+    /**
+     * @ORM\Column(type="string", length=40, nullable=true)
+     */
+    private $pseudo;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $share;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $estimatedMileage;
+
+    /**
+     * @ORM\Column(type="integer", nullable=true)
+     */
+    private $currentMileage;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -123,5 +148,65 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    public function getNames(): ?string
+    {
+        return $this->names;
+    }
+
+    public function setNames(string $names): self
+    {
+        $this->names = $names;
+
+        return $this;
+    }
+
+    public function getPseudo(): ?string
+    {
+        return $this->pseudo;
+    }
+
+    public function setPseudo(?string $pseudo): self
+    {
+        $this->pseudo = $pseudo;
+
+        return $this;
+    }
+
+    public function getShare(): ?int
+    {
+        return $this->share;
+    }
+
+    public function setShare(int $share): self
+    {
+        $this->share = $share;
+
+        return $this;
+    }
+
+    public function getEstimatedMileage(): ?int
+    {
+        return $this->estimatedMileage;
+    }
+
+    public function setEstimatedMileage(int $estimatedMileage): self
+    {
+        $this->estimatedMileage = $estimatedMileage;
+
+        return $this;
+    }
+
+    public function getCurrentMileage(): ?int
+    {
+        return $this->currentMileage;
+    }
+
+    public function setCurrentMileage(?int $currentMileage): self
+    {
+        $this->currentMileage = $currentMileage;
+
+        return $this;
     }
 }
