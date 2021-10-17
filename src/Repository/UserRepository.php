@@ -43,6 +43,18 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
               $this->findAll();
     }
 
+    /**
+     * @throws \Doctrine\ORM\NonUniqueResultException
+     * @throws \Doctrine\ORM\NoResultException
+     */
+    public function countAll()
+    {
+        $qb = $this->createQueryBuilder('u');
+        return $qb
+            ->select('count(u.id)')
+            ->getQuery()
+            ->getSingleScalarResult();
+    }
     // /**
     //  * @return User[] Returns an array of User objects
     //  */

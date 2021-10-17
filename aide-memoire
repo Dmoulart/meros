@@ -1,0 +1,3 @@
+Créer une base de donnée de test en clonant sa bdd locale
+-> créer une bdd vide apellée meros_test en
+-> mysqldump meros | mysql meros_test
