@@ -4,12 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
+ * @Serializer\ExclusionPolicy("ALL")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -17,16 +19,21 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Serializer\Expose
      */
     private $id;
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
+     *
+     * @Serializer\Expose
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
+     *
+     * @Serializer\Expose
      */
     private $roles = [];
 
@@ -38,26 +45,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
+     *
+     * @Serializer\Expose
      */
     private $names;
 
     /**
      * @ORM\Column(type="string", length=40, nullable=true)
+     *
+     * @Serializer\Expose
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Serializer\Expose
      */
     private $share;
 
     /**
      * @ORM\Column(type="integer")
+     *
+     * @Serializer\Expose
      */
     private $estimatedMileage;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
+     *
+     * @Serializer\Expose
      */
     private $currentMileage;
 
