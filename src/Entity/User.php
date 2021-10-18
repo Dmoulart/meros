@@ -7,6 +7,7 @@ use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
@@ -25,55 +26,58 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=180, unique=true)
-     *
+     * @Assert\NotBlank
+     * @Assert\Email(
+     *     message = "The email '{{ value }}' is not a valid email."
+     * )
      * @Serializer\Expose
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
-     *
+     * @Assert\NotBlank
      * @Serializer\Expose
      */
     private $roles = [];
 
     /**
      * @var string The hashed password
+     * @Assert\NotBlank
+     * @Assert\GreaterThan(5)
      * @ORM\Column(type="string")
      */
     private $password;
 
     /**
      * @ORM\Column(type="string", length=255)
-     *
+     * @Assert\NotBlank
      * @Serializer\Expose
      */
     private $names;
 
     /**
      * @ORM\Column(type="string", length=40, nullable=true)
-     *
      * @Serializer\Expose
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="integer")
-     *
+     * @Assert\NotBlank
      * @Serializer\Expose
      */
     private $share;
 
     /**
      * @ORM\Column(type="integer")
-     *
+     * @Assert\NotBlank
      * @Serializer\Expose
      */
     private $estimatedMileage;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     *
      * @Serializer\Expose
      */
     private $currentMileage;

@@ -103,20 +103,6 @@
     "fzaninotto/faker": {
         "version": "v1.9.2"
     },
-    "hautelook/alice-bundle": {
-        "version": "2.9",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "2.1",
-            "ref": "ff94d76b2ec0c552b5d67d401f59ab8fd62f3d5f"
-        },
-        "files": [
-            "config/packages/test/hautelook_alice.yaml",
-            "config/packages/dev/hautelook_alice.yaml",
-            "fixtures/.gitignore"
-        ]
-    },
     "jms/metadata": {
         "version": "2.5.1"
     },
@@ -149,19 +135,6 @@
     },
     "namshi/jose": {
         "version": "7.2.3"
-    },
-    "nelmio/alice": {
-        "version": "3.7",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "3.2",
-            "ref": "0b9900ece737bec7752e4155c0164639dd9b0cb0"
-        },
-        "files": [
-            "config/packages/test/nelmio_alice.yaml",
-            "config/packages/dev/nelmio_alice.yaml"
-        ]
     },
     "nelmio/cors-bundle": {
         "version": "2.1",
@@ -497,6 +470,22 @@
     "symfony/string": {
         "version": "v5.3.7"
     },
+    "symfony/translation-contracts": {
+        "version": "v2.4.0"
+    },
+    "symfony/validator": {
+        "version": "5.3",
+        "recipe": {
+            "repo": "github.com/symfony/recipes",
+            "branch": "master",
+            "version": "4.3",
+            "ref": "3eb8df139ec05414489d55b97603c5f6ca0c44cb"
+        },
+        "files": [
+            "config/packages/validator.yaml",
+            "config/packages/test/validator.yaml"
+        ]
+    },
     "symfony/var-dumper": {
         "version": "v5.3.8"
     },
@@ -505,15 +494,6 @@
     },
     "symfony/yaml": {
         "version": "v5.3.6"
-    },
-    "theofidry/alice-data-fixtures": {
-        "version": "1.4",
-        "recipe": {
-            "repo": "github.com/symfony/recipes",
-            "branch": "master",
-            "version": "1.0",
-            "ref": "fe5a50faf580eb58f08ada2abe8afbd2d4941e05"
-        }
     },
     "theseer/tokenizer": {
         "version": "1.2.1"

@@ -7,7 +7,6 @@ use App\Entity\User;
 use App\Repository\UserRepository;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\Process\Process;
-use Hautelook\AliceBundle\PhpUnit\ReloadDatabaseTrait;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 
 
@@ -48,7 +47,8 @@ class UserControllerTest extends WebTestCase
         $user = [
             "names" => "Mabouno Wololo",
             "share" => 500,
-            "email" => "Mabuono@test.com",
+            "roles" => ["ROLE_USER"],
+            "email" => "Manono@test.com",
             "password" => "123456",
             "estimatedMileage" => 5000
         ];
@@ -71,22 +71,30 @@ class UserControllerTest extends WebTestCase
     {
         self::ensureKernelShutdown();
 
+        $client = static::createClient();
+
         $user = [
             "names" => "Rollo Wololo",
             "email" => "Froidure@test.com",
             "password" => "123456",
         ];
 
-        $client = static::createClient();
-
         $client->jsonRequest("POST","/users",($user));
 
         $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
 
-        $response = json_decode($client->getResponse()->getContent(),true);
+        $user = [
+            "names" => "Rollo Wololo",
+            "share" => 500,
+            "roles" => ["ROLE_USER"],
+            "email" => "MaonoArg@test.com",
+            "password" => "12345", //Test password can't be less than 6 chars
+            "estimatedMileage" => 5000
+        ];
 
-        $this->assertContains("estimatedMileage",$response["properties"]);
-        $this->assertContains("share",$response["properties"]);
+        $client->jsonRequest("POST","/users",($user));
+
+        $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
     }
 
     /** @test */

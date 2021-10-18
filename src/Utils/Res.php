@@ -18,8 +18,7 @@ class Res
                          array $headers = ['Content-Type'=>'application/json']): Response
     {
         if(is_string($data))
-            $data = [$statusCode === 200 ? 'response' : 'error' => $data];
-
+            $data = [$statusCode === 200 ? 'response' : 'errors' => $data];
 
         $data = Res::converter()->toJSON($data);
 

@@ -12,6 +12,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class UserController extends AbstractController
 {
@@ -20,9 +21,12 @@ class UserController extends AbstractController
 
     private EntityManagerInterface $em;
 
-    function __construct(UserRepository $repository, EntityManagerInterface $em ){
+    private ValidatorInterface $validator;
+
+    function __construct(UserRepository $repository, EntityManagerInterface $em, ValidatorInterface $validator){
         $this->repository = $repository;
         $this->em = $em;
+        $this->validator = $validator;
     }
 
     /**
@@ -66,19 +70,16 @@ class UserController extends AbstractController
     /**
      * @Route("/users", name="app_users_create", methods={"POST"})
      */
-    function create(Request $request, UserPasswordHasherInterface $passwordHasher): Response
+    function create(Request $request,
+                    UserPasswordHasherInterface $passwordHasher): Response
     {
         try {
             /** @var User $user */
-            $user = Req::toEntity($request, User::class, [
-                'required' => [
-                    'estimatedMileage',
-                    'email',
-                    'password',
-                    'names',
-                    'share'
-                ]
-            ]);
+            $user = Req::toEntity($request, User::class);
+
+            $errors = $this->validator->validate($user);
+
+            if (count($errors)) return Res::json($errors, 411);
 
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
@@ -119,6 +120,10 @@ class UserController extends AbstractController
             $user = Req::toEntity($request, User::class, [
                 'ignore' => ['password']
             ], $user);
+
+            $errors = $this->validator->validate($user);
+
+            if (count($errors)) return Res::json($errors, 411);
 
             if(($password = $request->get('password'))){
                 $hashedPassword = $passwordHasher->hashPassword(
