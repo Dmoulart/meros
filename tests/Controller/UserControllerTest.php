@@ -44,6 +44,8 @@ class UserControllerTest extends WebTestCase
     {
         self::ensureKernelShutdown();
 
+        $client = static::createClient();
+
         $user = [
             "names" => "Mabouno Wololo",
             "share" => 500,
@@ -52,8 +54,6 @@ class UserControllerTest extends WebTestCase
             "password" => "123456",
             "estimatedMileage" => 5000
         ];
-
-        $client = static::createClient();
 
         $client->jsonRequest("POST","/users",($user));
 
@@ -102,9 +102,9 @@ class UserControllerTest extends WebTestCase
     {
         self::ensureKernelShutdown();
 
-        $users = $this->repository->findAll();
-
         $client = static::createClient();
+
+        $users = $this->repository->findAll();
 
         $client->request('GET','/users');
 
@@ -120,11 +120,11 @@ class UserControllerTest extends WebTestCase
     {
         self::ensureKernelShutdown();
 
+        $client = static::createClient();
+
         $users = $this->repository->findAll();
 
         $firstUser = $users[0];
-
-        $client = static::createClient();
 
         $client->request('GET','/users/'.$firstUser->getId());
 
@@ -142,11 +142,11 @@ class UserControllerTest extends WebTestCase
     {
         self::ensureKernelShutdown();
 
+        $client = static::createClient();
+
         $users = $this->repository->findAll();
 
         $firstUser = $users[count($users) - 1];
-
-        $client = static::createClient();
 
         $client->request('GET','/users/'.$firstUser->getId() + 1);
 
