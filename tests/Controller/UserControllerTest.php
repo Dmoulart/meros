@@ -2,42 +2,39 @@
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\EntityGenerator;
+use App\DataFixtures\AppFixtures;
 use App\Entity\User;
 use App\Repository\UserRepository;
-use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Component\Process\Process;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
-
 
 class UserControllerTest extends WebTestCase
 {
-    private EntityGenerator $entityGenerator;
-    private EntityManagerInterface $em;
-    private UserRepository $repository;
-
-    // use ReloadDatabaseTrait;
+    private static UserRepository $repository;
 
     /**
      * {@inheritDoc}
      */
-    protected function setUp(): void
+    public static function setUpBeforeClass(): void
     {
         self::bootKernel();
 
-        $this->em = static::$kernel->getContainer()
+        $em = static::$kernel->getContainer()
             ->get('doctrine')
             ->getManager();
 
-        $this->repository = $this->em->getRepository(User::class);
+        self::$repository = $em->getRepository(User::class);
 
-        $updateDb = new Process(['php bin/console doctrine:schema:update --force']);
-        $updateDb->run();
+        $users = self::$repository->findAll();
 
-        $populateDb = new Process(['php bin/console doctrine:fixtures:load --purge-with-truncate']);
-        $populateDb->run();
+        foreach($users as $user){
+            $em->remove($user);
+        }
 
+        $em->flush();
+
+        (new AppFixtures)->load($em);
     }
+
 
     /** @test */
     public function create(): void
@@ -56,8 +53,6 @@ class UserControllerTest extends WebTestCase
         ];
 
         $client->jsonRequest("POST","/users",($user));
-
-        $this->assertResponseIsSuccessful();
 
         $response = json_decode($client->getResponse()->getContent(),true);
 
@@ -82,19 +77,47 @@ class UserControllerTest extends WebTestCase
         $client->jsonRequest("POST","/users",($user));
 
         $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+    }
 
-        $user = [
-            "names" => "Rollo Wololo",
-            "share" => 500,
-            "roles" => ["ROLE_USER"],
-            "email" => "MaonoArg@test.com",
-            "password" => "12345", //Test password can't be less than 6 chars
-            "estimatedMileage" => 5000
-        ];
 
-        $client->jsonRequest("POST","/users",($user));
+    /** @test */
+    public function update(): void
+    {
+        self::ensureKernelShutdown();
 
-        $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+        $client = static::createClient();
+
+        $user = self::$repository->findAll()[0];
+
+        $client->jsonRequest(
+            "PUT",
+            "/users/".$user->getId(),
+            ['email' => "wololo@test.com"]
+        );
+
+        $response = json_decode($client->getResponse()->getContent(),true);
+
+        $updatedUser = $response["user"];
+
+        $this->assertEquals("wololo@test.com", $updatedUser['email']);
+    }
+
+    /** @test */
+    public function failToUpdate(): void
+    {
+        self::ensureKernelShutdown();
+
+        $client = static::createClient();
+
+        $user = self::$repository->findAll()[0];
+
+        $client->jsonRequest(
+            "PUT",
+            "/users/".$user->getId(),
+            ["password" => "12"]
+        );
+
+        $this->assertResponseStatusCodeSame(411);
     }
 
     /** @test */
@@ -104,15 +127,13 @@ class UserControllerTest extends WebTestCase
 
         $client = static::createClient();
 
-        $users = $this->repository->findAll();
+        $users = self::$repository->findAll();
 
         $client->request('GET','/users');
 
         $fetchedUsers = json_decode($client->getResponse()->getContent(),true);
 
         $this->assertSameSize($users, $fetchedUsers);
-
-        $this->assertResponseIsSuccessful();
     }
 
     /** @test */
@@ -122,19 +143,17 @@ class UserControllerTest extends WebTestCase
 
         $client = static::createClient();
 
-        $users = $this->repository->findAll();
+        $users = self::$repository->findAll();
 
-        $firstUser = $users[0];
+        $user = $users[2];
 
-        $client->request('GET','/users/'.$firstUser->getId());
-
-        $this->assertResponseIsSuccessful();
+        $client->request('GET','/users/'.$user->getId());
 
         $response = json_decode($client->getResponse()->getContent(),true);
 
-        $fetchedFirstUser = (object) $response[0];
+        $fetchedFirstUser = $response;
 
-        $this->assertEquals($firstUser->getEmail(), $fetchedFirstUser->email);
+        $this->assertEquals($user->getEmail(), $fetchedFirstUser['email']);
     }
 
     /** @test */
@@ -144,7 +163,7 @@ class UserControllerTest extends WebTestCase
 
         $client = static::createClient();
 
-        $users = $this->repository->findAll();
+        $users = self::$repository->findAll();
 
         $firstUser = $users[count($users) - 1];
 

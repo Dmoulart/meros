@@ -8,13 +8,6 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class EntityGenerator
 {
-    private UserPasswordHasherInterface $hasher;
-
-    public function __construct(UserPasswordHasherInterface $hasher)
-    {
-        $this->hasher = $hasher;
-    }
-
     function generate(string $class): ?User
     {
         return match ($class) {
@@ -28,7 +21,6 @@ class EntityGenerator
         $generator = Factory::create('fr_FR');
 
         $user = new User;
-        $hashedPassword = $this->hasher->hashPassword($user,'123456');
 
         // A user can be two or more persons.
         $names = rand(0,1) > 0 ?
@@ -44,7 +36,7 @@ class EntityGenerator
 
         return $user
             ->setEmail($generator->email)
-            ->setPassword($hashedPassword)
+            ->setPassword('123456')
             ->setRoles(['ROLE_USER'])
             ->setNames($names)
             ->setPseudo($pseudo)

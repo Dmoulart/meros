@@ -39,18 +39,29 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\NotBlank
      * @Serializer\Expose
      */
-    private $roles = [];
+    private $roles = ["ROLE_USER"];
 
     /**
      * @var string The hashed password
      * @Assert\NotBlank
-     * @Assert\GreaterThan(5)
+     * @Assert\Length(
+     *      min = 6,
+     *      max = 150,
+     *      minMessage = "Votre mot de passe doit compter six caractères au minimum.",
+     *      maxMessage = "Votre mot de passe ne peut pas compter plus de cent cinquante caractères."
+     * )
      * @ORM\Column(type="string")
      */
     private $password;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="string", length=40)
+     * * @Assert\Length(
+     *      min = 3,
+     *      max = 150,
+     *      minMessage = "Votre nom doit compter trois caractères au minimum.",
+     *      maxMessage = "Votre nom ne peut pas compter plus de quarante caractères."
+     * )
      * @Assert\NotBlank
      * @Serializer\Expose
      */
@@ -58,6 +69,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=40, nullable=true)
+     * @Assert\Length(
+     *      min = 3,
+     *      max = 40,
+     *      minMessage = "Votre pseudonyme doit compter trois caractères au minimum.",
+     *      maxMessage = "Votre pseudonyme ne peut pas compter plus de quarante caractères."
+     * )
      * @Serializer\Expose
      */
     private $pseudo;

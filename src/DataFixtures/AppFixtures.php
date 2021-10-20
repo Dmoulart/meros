@@ -11,23 +11,12 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
 class AppFixtures extends Fixture
 {
-    private UserPasswordHasherInterface $hasher;
-    private EntityGenerator $entityGenerator;
-
-    public function __construct(UserPasswordHasherInterface $hasher, EntityGenerator $entityGenerator)
-    {
-        $this->hasher = $hasher;
-        $this->entityGenerator = $entityGenerator;
-    }
-
     public function load(ObjectManager $manager)
     {
-        $generator = Factory::create('fr_FR');
-
         $admin = new User;
-        $hashedPassword = $this->hasher->hashPassword($admin,'123456');
+
         $admin
-            ->setPassword($hashedPassword)
+            ->setPassword('123456')
             ->setRoles(['ROLE_USER','ROLE_ADMIN'])
             ->setPseudo('Rick')
             ->setEmail('dorian.moulart@gmail.com')
@@ -39,8 +28,10 @@ class AppFixtures extends Fixture
 
         $manager->persist($admin);
 
+        $entityGenerator = new EntityGenerator;
+
         for($i = 0;$i < 10;$i ++){
-            $user = $this->entityGenerator->generate(User::class);
+            $user = $entityGenerator->generate(User::class);
             $manager->persist($user);
         }
 

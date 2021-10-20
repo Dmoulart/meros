@@ -73,7 +73,6 @@ class UserController extends AbstractController
     function create(Request $request,
                     UserPasswordHasherInterface $passwordHasher): Response
     {
-        try {
             /** @var User $user */
             $user = Req::toEntity($request, User::class);
 
@@ -96,10 +95,6 @@ class UserController extends AbstractController
                 'User successfully created',
                 'user' =>  $user,
             ]);
-
-        } catch (EntityConverterException $e) {
-            return $e->getResponse();
-        }
     }
 
     /**
@@ -107,8 +102,6 @@ class UserController extends AbstractController
      */
     function update(Request $request, int $id, UserPasswordHasherInterface $passwordHasher): Response
     {
-        try {
-
             $user = $this->repository->find($id);
 
             if(!$user) return Res::json(
@@ -142,8 +135,5 @@ class UserController extends AbstractController
                 'user' =>  $user,
             ]);
 
-        } catch (EntityConverterException $e) {
-            return $e->getResponse();
-        }
     }
 }
