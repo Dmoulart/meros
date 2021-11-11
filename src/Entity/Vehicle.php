@@ -57,7 +57,7 @@ class Vehicle
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=6)
      * @Assert\Regex(
-     *     "/([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/",
+     *     "/([a-f0-9]{3}){1,2}\b/i",
      *      message="La couleur doit être au format hexadécimal."
      * )
      * @Serializer\Expose
@@ -86,6 +86,10 @@ class Vehicle
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=30)
+     * @Assert\Choice(
+     *     {"gasoline", "diesel", "electricity"},
+     *     message="Le type de carburant n'est pas reconnu."
+     * )
      * @Serializer\Expose
      */
     private $fuelType;

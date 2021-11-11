@@ -163,7 +163,7 @@ class EntityGenerator
             ->setBrand($brand)
             ->setCity($generator->city)
             ->setColor(substr($generator->hexColor,1)) // We don't store the # of the hex
-            ->setFuelType($generator->randomElement(['diesel','electric']))
+            ->setFuelType($generator->randomElement(["gasoline", "diesel", "electricity"]))
             ->setSeats(rand(2,6))
             ->setMileage(rand(1000,50000))
             ->setStreet($generator->streetName)

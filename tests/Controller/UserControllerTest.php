@@ -2,39 +2,25 @@
 
 namespace App\Tests\Controller;
 
-use App\DataFixtures\AppFixtures;
 use App\Entity\User;
-use App\Repository\UserRepository;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use App\Test\MerosCrudTestCase;
 
-class UserControllerTest extends WebTestCase
+class UserControllerTest extends MerosCrudTestCase
 {
-    private static UserRepository $repository;
-
     /**
      * {@inheritDoc}
      */
     public static function setUpBeforeClass(): void
     {
-        self::bootKernel();
-
-        $em = static::$kernel->getContainer()
-            ->get('doctrine')
-            ->getManager();
-
-        self::$repository = $em->getRepository(User::class);
-
-        $users = self::$repository->findAll();
-
-        foreach($users as $user){
-            $em->remove($user);
-        }
-
-        $em->flush();
-
-        (new AppFixtures)->load($em);
+        self::resetDatabase(User::class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public function setUp(): void {
+        self::resetDatabase(User::class);
+    }
 
     /** @test */
     public function create(): void
