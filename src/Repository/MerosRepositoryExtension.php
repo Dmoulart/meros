@@ -2,11 +2,16 @@
 
 namespace App\Repository;
 
-use App\Entity\User;
-use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\ORMException;
 
 trait MerosRepositoryExtension
 {
+
+    /**
+     * @param Object|array $entities
+     * @return array|Object|null
+     * @throws ORMException
+     */
     public function removeOneOrAll(Object | array $entities): array|Object|null
     {
         if(is_array($entities)) {

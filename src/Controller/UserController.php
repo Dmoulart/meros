@@ -46,7 +46,7 @@ class UserController extends MerosController
         $users = $this->repository->findOneOrAll($id);
 
         if(!$users) return $this->json(
-            $id ? 'Cannot find user with this id' : 'Cannot find users'
+            $id ? 'Cannot find this user' : 'Cannot find any user'
             ,404
         );
 

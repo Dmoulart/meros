@@ -22,7 +22,7 @@ class Vehicle
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=40)
+     * @ORM\Column(type="string", length=40, unique=true)
      * @Serializer\Expose
      */
     private $name;
@@ -56,12 +56,19 @@ class Vehicle
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=6)
+     * @Assert\Regex(
+     *     "/([a-fA-F0-9]{6}|[a-fA-F0-9]{3})/",
+     *      message="La couleur doit être au format hexadécimal."
+     * )
      * @Serializer\Expose
      */
     private $color;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero(
+     *     message="Le kilométrage ne peut être inférieur à 0."
+     * )
      * @Serializer\Expose
      */
     private $mileage;
@@ -69,6 +76,9 @@ class Vehicle
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="integer")
+     * @Assert\PositiveOrZero(
+     *     message="Le nombre de places ne peut être inférieur à 0."
+     * )
      * @Serializer\Expose
      */
     private $seats;
@@ -96,6 +106,9 @@ class Vehicle
 
     /**
      * @ORM\Column(type="string", length=5, nullable=true)
+     * @Assert\Positive(
+     *     message="Le numéro de rue ne peut être inférieur à 0."
+     * )
      * @Serializer\Expose
      */
     private $streetNumber;

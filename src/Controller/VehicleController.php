@@ -89,7 +89,7 @@ class VehicleController extends MerosController
             $vehicle = $this->repository->find($id);
 
             if(!$vehicle) return $this->json(
-                'Cannot find vehicle with this id'
+                'Cannot find this vehicle'
                 ,404
             );
 

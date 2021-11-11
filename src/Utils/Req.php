@@ -12,13 +12,13 @@ class Req
     /**
      * @param Request $request
      * @param string $class
-     * @param array $params
+     * @param array|null $params
      * @param Object|null $entityToUpdate
      * @return Object|null
      */
     static function toEntity(Request $request,
                              string  $class,
-                             array   $params = [],
+                             array | null $params = [],
                              Object  $entityToUpdate = null): ?Object
     {
         try {

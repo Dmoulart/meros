@@ -91,7 +91,8 @@ class EntityGenerator
     private function generateVehicle(): Vehicle
     {
         $generator = Factory::create('fr_FR');
-        $carsNames = ["Carzilla",
+        $carsNames = [
+            "Carzilla",
             "Klutch",
             "Speedin'",
             "DemonChick",
@@ -107,6 +108,8 @@ class EntityGenerator
             "McQueen",
             "T-Bone"
         ];
+        $name = $generator->randomElement($carsNames).' '.$generator->randomElement($carsNames).rand(0,100);
+
         $models = '[{"brand": "Seat", "models": ["Alhambra", "Altea", "Altea XL", "Arosa", "Cordoba", "Cordoba Vario", "Exeo", "Ibiza", "Ibiza ST", "Exeo ST", "Leon", "Leon ST", "Inca", "Mii", "Toledo"]},
                     {"brand": "Renault", "models": ["Captur", "Clio", "Clio Grandtour", "Espace", "Express", "Fluence", "Grand Espace", "Grand Modus", "Grand Scenic", "Kadjar", "Kangoo", "Kangoo Express", "Koleos", "Laguna", "Laguna Grandtour", "Latitude", "Mascott", "Mégane", "Mégane CC", "Mégane Combi", "Mégane Grandtour", "Mégane Coupé", "Mégane Scénic", "Scénic", "Talisman", "Talisman Grandtour", "Thalia", "Twingo", "Wind", "Zoé"]},
                     {"brand": "Peugeot", "models": ["1007", "107", "106", "108", "2008", "205", "205 Cabrio", "206", "206 CC", "206 SW", "207", "207 CC", "207 SW", "306", "307", "307 CC", "307 SW", "308", "308 CC", "308 SW", "309", "4007", "4008", "405", "406", "407", "407 SW", "5008", "508", "508 SW", "605", "806", "607", "807", "Bipper", "RCZ"]},
@@ -152,10 +155,10 @@ class EntityGenerator
         $brandAndModel = $generator->randomElement($models);
         $brand = $brandAndModel['brand'];
         $model = $generator->randomElement($brandAndModel['models']);
-        $vehicle = new Vehicle();
 
+        $vehicle = new Vehicle();
         $vehicle
-            ->setName($generator->randomElement($carsNames))
+            ->setName($name)
             ->setModel($model)
             ->setBrand($brand)
             ->setCity($generator->city)
