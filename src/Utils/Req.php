@@ -9,9 +9,7 @@ use Symfony\Component\HttpFoundation\Request;
 
 class Req
 {
-    /**
-     * @throws EntityConverterException
-     */
+
     static function toEntity(Request $request,
                              string $class,
                              array $params = [],
@@ -65,19 +63,19 @@ class Req
 
             }
             catch(Exception $e) {
-
+                continue;
             }
         }
 
-        $missingProps = [];
+/*        $missingProps = [];
 
         if(isset($params['required']))
             foreach($params['required'] as $requiredParam) {
                 if(!in_array($requiredParam,$filledProperties))
                     $missingProps[] = $requiredParam;
-            }
+            }*/
 
-        if(count($missingProps)){
+/*        if(count($missingProps)){
             throw new EntityConverterException(
                 "The $class is missing required properties",
                 0,
@@ -85,7 +83,7 @@ class Req
                 $missingProps,
                 $class
             );
-        }
+        }*/
 
         return $entity;
     }
