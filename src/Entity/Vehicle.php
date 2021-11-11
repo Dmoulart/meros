@@ -30,9 +30,22 @@ class Vehicle
     /**
      * @Assert\NotBlank
      * @Assert\Length(
-     *      min = 6,
+     *      min = 3,
+     *      max = 30,
+     *      minMessage = "Le nom de la marque de la voiture ne peut pas compter moins de 3 caractères.",
+     *      maxMessage = "Le nom de la marque de la voiture ne peut pas compter plus de 30 caractères."
+     * )
+     * @ORM\Column(type="string", length=30)
+     * @Serializer\Expose
+     */
+    private $brand;
+
+    /**
+     * @Assert\NotBlank
+     * @Assert\Length(
+     *      min = 1,
      *      max = 40,
-     *      minMessage = "Le nom de modèle de la voiture ne peut pas compter moins de 6 caractères.",
+     *      minMessage = "Le nom de modèle de la voiture ne peut pas compter moins de 1 caractère.",
      *      maxMessage = "Le nom de modèle de la voiture ne peut pas compter plus de 40 caractères."
      * )
      * @ORM\Column(type="string", length=60)
@@ -196,6 +209,18 @@ class Vehicle
     public function setStreetNumber(?string $streetNumber): self
     {
         $this->streetNumber = $streetNumber;
+
+        return $this;
+    }
+
+    public function getBrand(): ?string
+    {
+        return $this->brand;
+    }
+
+    public function setBrand(string $brand): self
+    {
+        $this->brand = $brand;
 
         return $this;
     }

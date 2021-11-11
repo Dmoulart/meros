@@ -2,7 +2,6 @@
 
 namespace App\Utils;
 
-use App\Exceptions\EntityConverterException;
 use Exception;
 use ReflectionClass;
 use Symfony\Component\HttpFoundation\Request;
@@ -10,20 +9,29 @@ use Symfony\Component\HttpFoundation\Request;
 class Req
 {
 
+    /**
+     * @param Request $request
+     * @param string $class
+     * @param array $params
+     * @param Object|null $entityToUpdate
+     * @return Object|null
+     */
     static function toEntity(Request $request,
-                             string $class,
-                             array $params = [],
-                             Object $entityToUpdate = null): ?Object
+                             string  $class,
+                             array   $params = [],
+                             Object  $entityToUpdate = null): ?Object
     {
         try {
             $reflectionClass = new ReflectionClass(new $class);
         }
         catch(\ReflectionException $e){
-            throw new EntityConverterException(
+            return null;
+
+           /* throw new EntityConverterException(
                 $e->getMessage(),
                 0,
                 $e
-            );
+            );*/
         }
 
 

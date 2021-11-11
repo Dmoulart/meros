@@ -14,9 +14,18 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class VehicleRepository extends ServiceEntityRepository
 {
+    use MerosRepositoryExtension;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Vehicle::class);
+    }
+
+    public function findOneOrAll(?int $id): array|Vehicle|null
+    {
+        return $id ? $this->find($id)
+            :
+            $this->findAll();
     }
 
     // /**

@@ -2,31 +2,25 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Repository\UserRepository;
+use App\Entity\Vehicle;
 use App\Repository\VehicleRepository;
 use App\Utils\Req;
-use App\Utils\Res;
 use Doctrine\ORM\EntityManagerInterface;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class VehicleController extends AbstractController
+class VehicleController extends MerosController
 {
 
     private VehicleRepository $repository;
 
-    private EntityManagerInterface $em;
-
-    private ValidatorInterface $validator;
-
-    function __construct(VehicleRepository $repository, EntityManagerInterface $em, ValidatorInterface $validator){
+    function __construct(VehicleRepository $repository,
+                         EntityManagerInterface $em,
+                         ValidatorInterface $validator){
+        parent::__construct($em, $validator);
         $this->repository = $repository;
-        $this->em = $em;
-        $this->validator = $validator;
     }
 
     /**
@@ -34,14 +28,13 @@ class VehicleController extends AbstractController
      */
     function find(int|string|null $id = null): Response
     {
-        $users = $this->repository->findOneOrAll($id);
+        $vehicles = $this->repository->findOneOrAll($id);
 
-        if(!$users) return Res::json(
-             $id ? 'Cannot find user with this id' : 'Cannot find users'
+        if(!$vehicles) return $this->json(
+             $id ? 'Cannot find vehicle with this id' : 'Cannot find vehicles'
             ,404
         );
-        return $this->json($users);
-       //  return Res::json($users);
+        return $this->json($vehicles);
     }
 
     /**
@@ -49,90 +42,75 @@ class VehicleController extends AbstractController
      */
     function remove(int|string|null $id = null): Response
     {
-        $users = $this->repository->findOneOrAll($id);
+        $vehicles = $this->repository->findOneOrAll($id);
 
-        if(!$users) return Res::json(
-            $id ? 'Cannot find user with this id' : 'Cannot find users'
+        if(!$vehicles) return $this->json(
+            $id ? 'Cannot find vehicle with this id' : 'Cannot find vehicles'
             ,404
         );
 
-        $deletedUsers = clone $users;
+        $deletedVehicles = $this->repository->removeOneOrAll($vehicles);
 
-        $this->em->remove($users);
         $this->em->flush();
 
-        return Res::json([
-            $id ? 'User successfully deleted' : 'Users successfully deleted',
-            "users" => $deletedUsers
+        return $this->json([
+            $id ? 'Vehicles successfully deleted' : 'Vehicle successfully deleted',
+            "vehicles" => $deletedVehicles
         ]);
     }
 
     /**
      * @Route("/vehicles", name="app_vehicles_create", methods={"POST"})
      */
-    function create(Request $request,
-                    UserPasswordHasherInterface $passwordHasher): Response
+    function create(Request $request): Response
     {
-            /** @var User $user */
-            $user = Req::toEntity($request, User::class);
+            /** @var Vehicle $vehicle */
+            $vehicle = Req::toEntity($request, Vehicle::class);
 
-            $errors = $this->validator->validate($user);
+            $errors = $this->validator->validate($vehicle);
 
-            if (count($errors)) return Res::json($errors, 411);
+            if (count($errors)) return $this->json($errors, 411);
 
-            $hashedPassword = $passwordHasher->hashPassword(
-                $user,
-                $user->getPassword()
-            );
-
-            $user->setPassword($hashedPassword);
-
-            $this->em->persist($user);
+            $this->em->persist($vehicle);
 
             $this->em->flush();
 
-            return Res::json([
-                'User successfully created',
-                'user' =>  $user,
+            return $this->json([
+                'Vehicle successfully created',
+                'vehicle' =>  $vehicle,
             ]);
     }
 
     /**
      * @Route("/vehicles/{id}", name="app_vehicles_update", methods={"PUT"})
      */
-    function update(Request $request, int $id, UserPasswordHasherInterface $passwordHasher): Response
+    function update(Request $request, int $id): Response
     {
-            $user = $this->repository->find($id);
+            $vehicle = $this->repository->find($id);
 
-            if(!$user) return Res::json(
-                'Cannot find user with this id'
+            if(!$vehicle) return $this->json(
+                'Cannot find vehicle with this id'
                 ,404
             );
 
-            /** @var User $user */
-            $user = Req::toEntity($request, User::class, [
-                'ignore' => ['password']
-            ], $user);
+            /** @var Vehicle $vehicle */
+            $vehicle = Req::toEntity($request,
+                Vehicle::class,
+                null,
+                $vehicle
+            );
 
-            $errors = $this->validator->validate($user);
+            $errors = $this->validator->validate($vehicle);
 
-            if (count($errors)) return Res::json($errors, 411);
+            if (count($errors)) return $this->json($errors, 411);
 
-            if(($password = $request->get('password'))){
-                $hashedPassword = $passwordHasher->hashPassword(
-                    $user,
-                    $password
-                );
-                $user->setPassword($hashedPassword);
-            }
-
-            $this->em->persist($user);
+            $this->em->persist($vehicle);
 
             $this->em->flush();
 
-            return Res::json([
-                'User successfully updated',
-                'user' =>  $user,
+            return $this->json([
+                'Vehicle successfully updated',
+                'vehicle' =>  $vehicle,
             ]);
     }
 }

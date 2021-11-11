@@ -50,9 +50,8 @@ class UserController extends MerosController
             ,404
         );
 
-        $deletedUsers = clone $users;
+        $deletedUsers = $this->repository->removeOneOrAll($users);
 
-        $this->em->remove($users);
         $this->em->flush();
 
         return $this->json([
