@@ -28,7 +28,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
      * @Assert\Email(
-     *     message = "The email '{{ value }}' is not a valid email."
+     *     message = "L'email '{{ value }}' n'est pas valide."
      * )
      * @Serializer\Expose
      */
@@ -47,8 +47,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Length(
      *      min = 6,
      *      max = 150,
-     *      minMessage = "Votre mot de passe doit compter six caractères au minimum.",
-     *      maxMessage = "Votre mot de passe ne peut pas compter plus de cent cinquante caractères."
+     *      minMessage = "Votre mot de passe doit compter 6 caractères au minimum.",
+     *      maxMessage = "Votre mot de passe ne peut pas compter plus de 150 caractères."
      * )
      * @ORM\Column(type="string")
      */
@@ -58,9 +58,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Column(type="string", length=40)
      * * @Assert\Length(
      *      min = 3,
-     *      max = 150,
-     *      minMessage = "Votre nom doit compter trois caractères au minimum.",
-     *      maxMessage = "Votre nom ne peut pas compter plus de quarante caractères."
+     *      max = 40,
+     *      minMessage = "Votre nom doit compter 3 caractères au minimum.",
+     *      maxMessage = "Votre nom ne peut pas compter plus de 40 caractères."
      * )
      * @Assert\NotBlank
      * @Serializer\Expose
@@ -72,8 +72,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Length(
      *      min = 3,
      *      max = 40,
-     *      minMessage = "Votre pseudonyme doit compter trois caractères au minimum.",
-     *      maxMessage = "Votre pseudonyme ne peut pas compter plus de quarante caractères."
+     *      minMessage = "Votre pseudonyme doit compter 3 caractères au minimum.",
+     *      maxMessage = "Votre pseudonyme ne peut pas compter plus de 40 caractères."
      * )
      * @Serializer\Expose
      */

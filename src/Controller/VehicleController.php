@@ -2,7 +2,6 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Exceptions\EntityConverterException;
 use App\Repository\UserRepository;
 use App\Utils\Req;
 use App\Utils\Res;
@@ -14,7 +13,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController extends AbstractController
+class VehicleController extends AbstractController
 {
 
     private UserRepository $repository;
@@ -41,7 +40,7 @@ class UserController extends AbstractController
             ,404
         );
         return $this->json($users);
-       // return Res::json($users);
+       //  return Res::json($users);
     }
 
     /**
@@ -134,6 +133,5 @@ class UserController extends AbstractController
                 'User successfully updated',
                 'user' =>  $user,
             ]);
-
     }
 }
