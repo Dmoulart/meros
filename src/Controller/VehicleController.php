@@ -3,6 +3,7 @@ namespace App\Controller;
 
 use App\Entity\User;
 use App\Repository\UserRepository;
+use App\Repository\VehicleRepository;
 use App\Utils\Req;
 use App\Utils\Res;
 use Doctrine\ORM\EntityManagerInterface;
@@ -16,20 +17,20 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class VehicleController extends AbstractController
 {
 
-    private UserRepository $repository;
+    private VehicleRepository $repository;
 
     private EntityManagerInterface $em;
 
     private ValidatorInterface $validator;
 
-    function __construct(UserRepository $repository, EntityManagerInterface $em, ValidatorInterface $validator){
+    function __construct(VehicleRepository $repository, EntityManagerInterface $em, ValidatorInterface $validator){
         $this->repository = $repository;
         $this->em = $em;
         $this->validator = $validator;
     }
 
     /**
-     * @Route("/users/{id}", name="app_users_get", methods={"GET"})
+     * @Route("/vehicles/{id}", name="app_vehicles_get", methods={"GET"})
      */
     function find(int|string|null $id = null): Response
     {
@@ -44,7 +45,7 @@ class VehicleController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}", name="app_users_delete", methods={"DELETE"})
+     * @Route("/vehicles/{id}", name="app_vehicles_delete", methods={"DELETE"})
      */
     function remove(int|string|null $id = null): Response
     {
@@ -67,7 +68,7 @@ class VehicleController extends AbstractController
     }
 
     /**
-     * @Route("/users", name="app_users_create", methods={"POST"})
+     * @Route("/vehicles", name="app_vehicles_create", methods={"POST"})
      */
     function create(Request $request,
                     UserPasswordHasherInterface $passwordHasher): Response
@@ -97,7 +98,7 @@ class VehicleController extends AbstractController
     }
 
     /**
-     * @Route("/users/{id}", name="app_users_update", methods={"PUT"})
+     * @Route("/vehicles/{id}", name="app_vehicles_update", methods={"PUT"})
      */
     function update(Request $request, int $id, UserPasswordHasherInterface $passwordHasher): Response
     {

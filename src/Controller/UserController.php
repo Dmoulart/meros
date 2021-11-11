@@ -2,10 +2,8 @@
 namespace App\Controller;
 
 use App\Entity\User;
-use App\Exceptions\EntityConverterException;
 use App\Repository\UserRepository;
 use App\Utils\Req;
-use App\Utils\Res;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -36,7 +34,7 @@ class UserController extends AbstractController
     {
         $users = $this->repository->findOneOrAll($id);
 
-        if(!$users) return Res::json(
+        if(!$users) return $this->json(
              $id ? 'Cannot find user with this id' : 'Cannot find users'
             ,404
         );
@@ -51,7 +49,7 @@ class UserController extends AbstractController
     {
         $users = $this->repository->findOneOrAll($id);
 
-        if(!$users) return Res::json(
+        if(!$users) return $this->json(
             $id ? 'Cannot find user with this id' : 'Cannot find users'
             ,404
         );
@@ -78,7 +76,7 @@ class UserController extends AbstractController
 
             $errors = $this->validator->validate($user);
 
-            if (count($errors)) return Res::json($errors, 411);
+            if (count($errors)) return $this->json($errors, 411);
 
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
@@ -104,7 +102,7 @@ class UserController extends AbstractController
     {
             $user = $this->repository->find($id);
 
-            if(!$user) return Res::json(
+            if(!$user) return $this->json(
                 'Cannot find user with this id'
                 ,404
             );
@@ -116,7 +114,7 @@ class UserController extends AbstractController
 
             $errors = $this->validator->validate($user);
 
-            if (count($errors)) return Res::json($errors, 411);
+            if (count($errors)) return $this->json($errors, 411);
 
             if(($password = $request->get('password'))){
                 $hashedPassword = $passwordHasher->hashPassword(
