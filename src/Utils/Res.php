@@ -12,7 +12,7 @@ class Res
     {
         return Res::$_converter ?? (Res::$_converter = new Converter);
     }
-
+/*
     static function json(Object | array | string $data,
                          int $statusCode = 200,
                          array $headers = ['Content-Type'=>'application/json']): Response
@@ -23,5 +23,5 @@ class Res
         $data = Res::converter()->toJSON($data);
 
         return new Response($data, $statusCode, $headers);
-    }
+    }*/
 }

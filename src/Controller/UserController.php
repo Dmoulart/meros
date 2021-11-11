@@ -40,8 +40,8 @@ class UserController extends AbstractController
              $id ? 'Cannot find user with this id' : 'Cannot find users'
             ,404
         );
+
         return $this->json($users);
-       // return Res::json($users);
     }
 
     /**
@@ -61,10 +61,10 @@ class UserController extends AbstractController
         $this->em->remove($users);
         $this->em->flush();
 
-        return Res::json([
+        return $this->json([
             $id ? 'User successfully deleted' : 'Users successfully deleted',
-            "users" => $deletedUsers
-        ]);
+            "users" => $deletedUsers]
+        );
     }
 
     /**
@@ -91,7 +91,7 @@ class UserController extends AbstractController
 
             $this->em->flush();
 
-            return Res::json([
+            return $this->json([
                 'User successfully created',
                 'user' =>  $user,
             ]);
@@ -130,7 +130,7 @@ class UserController extends AbstractController
 
             $this->em->flush();
 
-            return Res::json([
+            return $this->json([
                 'User successfully updated',
                 'user' =>  $user,
             ]);
