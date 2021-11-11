@@ -12,19 +12,15 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class UserController extends AbstractController
+class UserController extends MerosController
 {
-
     private UserRepository $repository;
 
-    private EntityManagerInterface $em;
-
-    private ValidatorInterface $validator;
-
-    function __construct(UserRepository $repository, EntityManagerInterface $em, ValidatorInterface $validator){
-        $this->repository = $repository;
-        $this->em = $em;
-        $this->validator = $validator;
+    function __construct(UserRepository $repository,
+                         EntityManagerInterface $em,
+                         ValidatorInterface $validator){
+       parent::__construct($em, $validator);
+       $this->repository = $repository;
     }
 
     /**
