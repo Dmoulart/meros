@@ -12,6 +12,7 @@ class UserControllerTest extends MerosCrudTestCase
      */
     public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
         self::resetDatabase(User::class);
     }
 

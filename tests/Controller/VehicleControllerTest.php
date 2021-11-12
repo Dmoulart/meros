@@ -14,6 +14,7 @@ class VehicleControllerTest extends MerosCrudTestCase
      */
     public static function setUpBeforeClass(): void
     {
+        parent::setUpBeforeClass();
         self::resetDatabase(Booking::class);
         self::resetDatabase(Vehicle::class);
     }
