@@ -1,6 +1,7 @@
 Créer une base de donnée de test en clonant sa bdd locale
 -> créer une bdd vide apellée meros_test en
 -> mysqldump meros | mysql meros_test
+-> mysqldump -u "root" meros | mysql -u "root" meros_test
 
 == make test
 php ./vendor/bin/phpunit

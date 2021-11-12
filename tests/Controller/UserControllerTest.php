@@ -35,7 +35,8 @@ class UserControllerTest extends MerosCrudTestCase
             "roles" => ["ROLE_USER"],
             "email" => "Manono@test.com",
             "password" => "123456",
-            "estimatedMileage" => 5000
+            "estimatedMileage" => 5000,
+            "bookings" => []
         ];
 
         $client->jsonRequest("POST","/users",($user));
@@ -58,6 +59,7 @@ class UserControllerTest extends MerosCrudTestCase
             "names" => "Rollo Wololo",
             "email" => "Froidure@test.com",
             "password" => "123456",
+            "bookings" => []
         ];
 
         $client->jsonRequest("POST","/users",($user));

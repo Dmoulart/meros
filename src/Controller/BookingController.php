@@ -130,6 +130,7 @@ class BookingController extends MerosController
                 null,
                 $booking
             );
+
             //todo : factorize this (same in create)
             if(($vehicleId = $request->get('vehicle'))){
                 $vehicle = $this->vehicleRepository->find($vehicleId);
