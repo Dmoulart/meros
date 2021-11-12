@@ -22,6 +22,9 @@ class Vehicle
     private $id;
 
     /**
+     * @Assert\NotNull(
+     *     message="Une voiture doit avoir un nom."
+     * )
      * @ORM\Column(type="string", length=40, unique=true)
      * @Serializer\Expose
      */

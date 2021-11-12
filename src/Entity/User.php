@@ -27,6 +27,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @ORM\Column(type="string", length=180, unique=true)
      * @Assert\NotBlank
+     * @Assert\NotNull(
+     *     message="Un email doit être renseigné."
+     * )
      * @Assert\Email(
      *     message = "L'email '{{ value }}' n'est pas valide."
      * )
@@ -56,11 +59,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     /**
      * @ORM\Column(type="string", length=40)
-     * * @Assert\Length(
+     * @Assert\Length(
      *      min = 3,
      *      max = 40,
      *      minMessage = "Votre nom doit compter 3 caractères au minimum.",
      *      maxMessage = "Votre nom ne peut pas compter plus de 40 caractères."
+     * )
+     * @Assert\NotNull(
+     *     message="Un utilisateur doit avoir un nom."
      * )
      * @Assert\NotBlank
      * @Serializer\Expose

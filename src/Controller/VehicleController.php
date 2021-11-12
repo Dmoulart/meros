@@ -6,6 +6,7 @@ use App\Entity\Vehicle;
 use App\Repository\VehicleRepository;
 use App\Utils\Req;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -64,6 +65,7 @@ class VehicleController extends MerosController
      */
     function create(Request $request): Response
     {
+
             /** @var Vehicle $vehicle */
             $vehicle = Req::toEntity($request, Vehicle::class);
 

@@ -10,3 +10,6 @@ php bin/console doctrine:fixtures:load
 
 == creat entity
 php bin/console make:entity
+
+== update packages
+composer update --ignore-platform-reqs

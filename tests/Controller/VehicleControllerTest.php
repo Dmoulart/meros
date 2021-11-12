@@ -61,7 +61,7 @@ class VehicleControllerTest extends MerosCrudTestCase
         $vehicle = [
             "model" => "159",
             "color" => "5437c9",
-            "mileage" => 47010,
+            "mileage" => -47010, // We use a non conform value
             "seats" => 2,
             "fuelType" => "diesel",
             "city" => "Torres",
