@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -21,6 +22,14 @@ class BookingRepository extends ServiceEntityRepository
         parent::__construct($registry, Booking::class);
     }
 
+    public function getForVehicle(Vehicle $vehicle){
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.vehicle = :val')
+            ->setParameter('val',$vehicle)
+            ->getQuery()
+            ->getResult()
+            ;
+    }
     // /**
     //  * @return Booking[] Returns an array of Booking objects
     //  */

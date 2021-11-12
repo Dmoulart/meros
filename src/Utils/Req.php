@@ -98,9 +98,9 @@ class Req
     /**
      * @param ReflectionProperty $property
      * @param Request $request
-     * @return DateTime|false|null
+     * @return string|array
      */
-    private static function getValueForProperty(ReflectionProperty $property, Request $request): string
+    private static function getValueForProperty(ReflectionProperty $property, Request $request): string | array
     {
         return $request->get($property->getName());
     }

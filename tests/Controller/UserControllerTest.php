@@ -103,7 +103,7 @@ class UserControllerTest extends MerosCrudTestCase
             ["password" => "12"]
         );
 
-        $this->assertResponseStatusCodeSame(411);
+        $this->assertResponseStatusCodeSame(422);
     }
 
     /** @test */

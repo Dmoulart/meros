@@ -116,7 +116,7 @@ class VehicleControllerTest extends MerosCrudTestCase
             ["color" => "12"]
         );
 
-        $this->assertResponseStatusCodeSame(411);
+        $this->assertResponseStatusCodeSame(422);
     }
 
     /** @test */

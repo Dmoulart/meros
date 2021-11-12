@@ -70,7 +70,7 @@ class UserController extends MerosController
 
             $errors = $this->validator->validate($user);
 
-            if (count($errors)) return $this->json($errors, 411);
+            if (count($errors)) return $this->json($errors, 422);
 
             $hashedPassword = $passwordHasher->hashPassword(
                 $user,
@@ -108,7 +108,7 @@ class UserController extends MerosController
 
             $errors = $this->validator->validate($user);
 
-            if (count($errors)) return $this->json($errors, 411);
+            if (count($errors)) return $this->json($errors, 422);
 
             if(($password = $request->get('password'))){
                 $hashedPassword = $passwordHasher->hashPassword(

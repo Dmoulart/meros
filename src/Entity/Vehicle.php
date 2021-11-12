@@ -127,6 +127,7 @@ class Vehicle
     private $streetNumber;
 
     /**
+     * todo : Calling getBookings may cause an infinite loop (vehicles is eager loaded in booking)... We need to either remove this prop or fix the problem
      * @ORM\OneToMany(targetEntity=Booking::class, mappedBy="vehicle",cascade={"remove"})
      * @Ignore
      * @Serializer\Expose
@@ -291,5 +292,10 @@ class Vehicle
         }
 
         return $this;
+    }
+
+    public function __toString(): string
+    {
+        return $this->getName()." ".$this->getBrand()." ".$this->getModel();
     }
 }

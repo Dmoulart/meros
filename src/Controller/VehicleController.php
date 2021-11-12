@@ -70,7 +70,7 @@ class VehicleController extends MerosController
 
             $errors = $this->validator->validate($vehicle);
 
-            if (count($errors)) return $this->json($errors, 411);
+            if (count($errors)) return $this->json($errors, 422);
 
             $this->em->persist($vehicle);
 
@@ -103,7 +103,7 @@ class VehicleController extends MerosController
 
             $errors = $this->validator->validate($vehicle);
 
-            if (count($errors)) return $this->json($errors, 411);
+            if (count($errors)) return $this->json($errors, 422);
 
             $this->em->persist($vehicle);
 

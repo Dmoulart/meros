@@ -199,8 +199,9 @@ class Booking
         return $this->vehicle;
     }
 
-    public function setVehicle(?Vehicle $vehicle): self
+    public function setVehicle(Vehicle | int $vehicle): self
     {
+
         $this->vehicle = $vehicle;
 
         return $this;
