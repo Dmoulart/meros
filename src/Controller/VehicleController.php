@@ -65,7 +65,6 @@ class VehicleController extends MerosController
      */
     function create(Request $request): Response
     {
-
             /** @var Vehicle $vehicle */
             $vehicle = Req::toEntity($request, Vehicle::class);
 

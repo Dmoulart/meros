@@ -2,14 +2,21 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Booking;
 use App\Entity\User;
 use App\Entity\Vehicle;
-use Doctrine\ORM\Mapping\Entity;
+use DateInterval;
+use Doctrine\Persistence\ObjectManager;
 use Faker\Factory;
 use ReflectionClass;
 
 class EntityGenerator
 {
+    private ObjectManager $manager;
+
+    function __construct(ObjectManager $manager){
+        $this->manager = $manager;
+    }
 
     /**
      * @param string $class
@@ -31,6 +38,7 @@ class EntityGenerator
         return match ($class) {
             User::class => $this->generateUser(),
             Vehicle::class => $this->generateVehicle(),
+            Booking::class => $this->generateBooking(),
             default => null,
         };
     }
@@ -42,7 +50,6 @@ class EntityGenerator
      */
     private function generateMany(string $class, int $n = 10): array
     {
-
         $className = (new ReflectionClass($class))->getShortName();
 
         $genFunc = 'generate'.$className;
@@ -108,7 +115,7 @@ class EntityGenerator
             "McQueen",
             "T-Bone"
         ];
-        $name = $generator->randomElement($carsNames).' '.$generator->randomElement($carsNames).rand(0,100);
+        $name = $generator->randomElement($carsNames).' '.$generator->randomElement($carsNames).rand(0,1000);
 
         $models = '[{"brand": "Seat", "models": ["Alhambra", "Altea", "Altea XL", "Arosa", "Cordoba", "Cordoba Vario", "Exeo", "Ibiza", "Ibiza ST", "Exeo ST", "Leon", "Leon ST", "Inca", "Mii", "Toledo"]},
                     {"brand": "Renault", "models": ["Captur", "Clio", "Clio Grandtour", "Espace", "Express", "Fluence", "Grand Espace", "Grand Modus", "Grand Scenic", "Kadjar", "Kangoo", "Kangoo Express", "Koleos", "Laguna", "Laguna Grandtour", "Latitude", "Mascott", "Mégane", "Mégane CC", "Mégane Combi", "Mégane Grandtour", "Mégane Coupé", "Mégane Scénic", "Scénic", "Talisman", "Talisman Grandtour", "Thalia", "Twingo", "Wind", "Zoé"]},
@@ -171,5 +178,38 @@ class EntityGenerator
         ;
 
         return $vehicle;
+    }
+
+    private function generateBooking(): Booking
+    {
+        $generator = Factory::create('fr_FR');
+
+        $booking = new Booking;
+
+        $startDate = $generator->dateTimeThisYear();
+
+        $intervalInHour = rand(1,10);
+
+        $endDate = (clone $startDate)->add(new DateInterval("PT$intervalInHour"."H"));
+
+        $startMileage = $startDate >= date('now') ? null : rand(0,200000);
+        $endMileage = $endDate >= date('now') ? rand(0,200000) : null;
+
+        $repo = $this->manager->getRepository(Vehicle::class);
+
+        $vehicle = $generator->randomElement($repo->findAll());
+
+        $booking
+            ->setInformations(rand(0,1) > 0.8 ? $generator->text(300) : null)
+            ->setStartDate($startDate)
+            ->setEndDate($endDate)
+            ->setIsOpen(rand(0,1) > 0.9)
+            ->setStartMileage($startMileage)
+            ->setEndMileage($endMileage)
+            ->setIsCompleted($endDate >= date('now'))
+            ->setVehicle($vehicle)
+        ;
+
+        return $booking;
     }
 }

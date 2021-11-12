@@ -13,3 +13,6 @@ php bin/console make:entity
 
 == update packages
 composer update --ignore-platform-reqs
+
+== update db
+php bin/console d:s:u -f

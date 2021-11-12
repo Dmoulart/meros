@@ -2,6 +2,7 @@
 
 namespace App\DataFixtures;
 
+use App\Entity\Booking;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -10,11 +11,15 @@ use Doctrine\Persistence\ObjectManager;
 
 class AppFixtures extends Fixture
 {
+    static EntityGenerator $entityGenerator;
 
     public function load(ObjectManager $manager)
     {
+        static::$entityGenerator = new EntityGenerator($manager);
+
         $this->createUsers($manager);
         $this->createVehicles($manager);
+        $this->createBookings($manager);
     }
 
     /**
@@ -36,9 +41,8 @@ class AppFixtures extends Fixture
 
         $manager->persist($admin);*/
 
-        $entityGenerator = new EntityGenerator;
 
-        $users = $entityGenerator->generate(User::class);
+        $users = static::$entityGenerator->generate(User::class);
 
         foreach($users as $user){
             $manager->persist($user);
@@ -49,12 +53,21 @@ class AppFixtures extends Fixture
 
     private function createVehicles(ObjectManager $manager)
     {
-        $entityGenerator = new EntityGenerator;
-
-        $vehicles = $entityGenerator->generate(Vehicle::class);
+        $vehicles = static::$entityGenerator->generate(Vehicle::class);
 
         foreach($vehicles as $vehicle){
             $manager->persist($vehicle);
+        }
+
+        $manager->flush();
+    }
+
+    private function createBookings(ObjectManager $manager)
+    {
+        $bookings = static::$entityGenerator->generate(Booking::class);
+
+        foreach($bookings as $booking){
+            $manager->persist($booking);
         }
 
         $manager->flush();

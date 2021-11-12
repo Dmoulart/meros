@@ -2,6 +2,7 @@
 
 namespace App\Tests\Controller;
 
+use App\Entity\Booking;
 use App\Entity\Vehicle;
 use App\Test\MerosCrudTestCase;
 
@@ -12,6 +13,7 @@ class VehicleControllerTest extends MerosCrudTestCase
      */
     public static function setUpBeforeClass(): void
     {
+        self::resetDatabase(Booking::class);
         self::resetDatabase(Vehicle::class);
     }
 
@@ -19,6 +21,7 @@ class VehicleControllerTest extends MerosCrudTestCase
      * {@inheritDoc}
      */
     public function setUp(): void {
+        self::resetDatabase(Booking::class);
         self::resetDatabase(Vehicle::class);
     }
 
@@ -92,7 +95,7 @@ class VehicleControllerTest extends MerosCrudTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent(),true);
-
+        // dd($response);
         $updatedVehicle = $response["vehicle"];
 
         $this->assertEquals("WOLOLO", $updatedVehicle['name']);

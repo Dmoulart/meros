@@ -2,13 +2,14 @@
 
 namespace App\Utils;
 
+use DateTime;
 use Exception;
 use ReflectionClass;
+use ReflectionProperty;
 use Symfony\Component\HttpFoundation\Request;
 
 class Req
 {
-
     /**
      * @param Request $request
      * @param string $class
@@ -34,7 +35,6 @@ class Req
             );*/
         }
 
-
         $entity = $entityToUpdate ? $entityToUpdate : new $class;
 
         $properties = $reflectionClass->getProperties();
@@ -53,21 +53,20 @@ class Req
                 if($reflectionClass->getMethod($attributeSetter)){
 
                     // If the prop in request is formatted as snake_case
-                    if($request->get(StringUtils::camelToSnake($property->getName())))
+/*                    if($request->get(StringUtils::camelToSnake($property->getName())))
                     {
                         $entity->$attributeSetter($request->get(StringUtils::camelToSnake($property->getName())));
-                        $filledProperties[] = $property->getName();
-                    }
+                    }*/
 
                     // If the prop in request is formatted as camelCase
                     if($request->get($property->getName()))
                     {
-                        $entity->$attributeSetter($request->get($property->getName()));
-                        $filledProperties[] = $property->getName();
+                        $value = static::getValueForProperty($property,$request);
+                        $entity->$attributeSetter($value);
                     }
 
+                    $filledProperties[] = $property->getName();
                 }
-
 
             }
             catch(Exception $e) {
@@ -95,4 +94,15 @@ class Req
 
         return $entity;
     }
+
+    /**
+     * @param ReflectionProperty $property
+     * @param Request $request
+     * @return DateTime|false|null
+     */
+    private static function getValueForProperty(ReflectionProperty $property, Request $request): string
+    {
+        return $request->get($property->getName());
+    }
+
 }

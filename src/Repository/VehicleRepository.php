@@ -21,13 +21,6 @@ class VehicleRepository extends ServiceEntityRepository
         parent::__construct($registry, Vehicle::class);
     }
 
-    public function findOneOrAll(?int $id): array|Vehicle|null
-    {
-        return $id ? $this->find($id)
-            :
-            $this->findAll();
-    }
-
     // /**
     //  * @return Vehicle[] Returns an array of Vehicle objects
     //  */

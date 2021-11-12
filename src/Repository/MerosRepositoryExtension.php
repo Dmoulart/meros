@@ -28,4 +28,11 @@ trait MerosRepositoryExtension
 
         return $deletedEntities;
     }
+
+    public function findOneOrAll(?int $id): array|Object|null
+    {
+        return $id ? $this->find($id)
+            :
+            $this->findAll();
+    }
 }
