@@ -35,15 +35,13 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function create(): void
+    public function canCreate(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
-        $vehicleRepo = parent::$em->getRepository(Vehicle::class);
-        $userRepo = parent::$em->getRepository(User::class);
-        $vehicle = $vehicleRepo->findAll()[0];
-        $user = $userRepo->findAll()[0];
+        $user = $this->getOneUser();
+        $vehicle = $this->getOneVehicle();
         $booking = [
             "informations" => "WOLOLO",
             "isOpen" => "false",
@@ -66,16 +64,151 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToCreate(): void
+    public function canRegisterUser(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
+        $user = $this->getOneUser();
+        $vehicle = $this->getOneVehicle();
+        $booking = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle->getId(),
+            "users"=> [$user->getId()],
+        ];
 
-        $vehicleRepo = parent::$em->getRepository(Vehicle::class);
-        $userRepo = parent::$em->getRepository(User::class);
-        $vehicle = $vehicleRepo->findAll()[0];
-        $user = $userRepo->findAll()[0];
+        $client->jsonRequest("POST","/bookings",($booking));
+
+        $response = json_decode($client->getResponse()->getContent(),true);
+
+        $createdBooking = $response["booking"];
+
+        $this->assertEquals($user->getEmail(), $createdBooking['users'][0]['email']);
+    }
+
+    /** @test */
+    public function canRegisterVehicle(): void
+    {
+        self::ensureKernelShutdown();
+
+        $client = static::createClient();
+        $user = $this->getOneUser();
+        $vehicle = $this->getOneVehicle();
+        $booking = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle->getId(),
+            "users"=> [$user->getId()],
+        ];
+
+        $client->jsonRequest("POST","/bookings",($booking));
+
+        $response = json_decode($client->getResponse()->getContent(),true);
+
+        $createdBooking = $response["booking"];
+
+        $this->assertEquals($vehicle->getModel(), $createdBooking['vehicle']['model']);
+    }
+
+    /** @test */
+    public function cannotBookUnavailableVehicle(): void
+    {
+        self::ensureKernelShutdown();
+
+        $client = static::createClient();
+        $user = $this->getOneUser();
+        $vehicle = $this->getOneVehicle();
+        $booking = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle->getId(),
+            "users"=> [$user->getId()],
+        ];
+
+        $client->jsonRequest("POST","/bookings",($booking));
+
+        $booking2 = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle->getId(),
+            "users"=> [$user->getId()],
+        ];
+
+        $client->jsonRequest("POST","/bookings",($booking2));
+
+        $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+    }
+
+    /** @test */
+    public function cannotCreateForUnavailableUser(): void
+    {
+        self::ensureKernelShutdown();
+
+        $client = static::createClient();
+        $user = $this->getOneUser();
+        $vehicle = $this->getOneVehicle();
+        $booking = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle->getId(),
+            "users"=> [$user->getId()],
+        ];
+
+        $client->jsonRequest("POST","/bookings",($booking));
+        $vehicle2 = $this->getOneVehicle(1);
+
+        $bookingWithSameUserAtSameDate = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle2->getId(),
+            "users"=> [$user->getId()],
+        ];
+
+        $client->jsonRequest("POST","/bookings",($bookingWithSameUserAtSameDate));
+
+        $response = json_decode($client->getResponse()->getContent(),true);
+
+        $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+    }
+
+    /** @test */
+    public function cannotCreateWithWrongMileageValues(): void
+    {
+        self::ensureKernelShutdown();
+        $client = static::createClient();
+        $user = $this->getOneUser();
+        $vehicle = $this->getOneVehicle();
         $booking = [
             "informations" => "WOLOLO",
             "isOpen" => "false",
@@ -91,6 +224,79 @@ class BookingControllerTest extends MerosCrudTestCase
         $client->jsonRequest("POST","/vehicles",($booking));
 
         $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+    }
+
+    /** @test */
+    public function cannotCreateWithNoUser(): void
+    {
+        self::ensureKernelShutdown();
+        $client = static::createClient();
+
+        $vehicle = $this->getOneVehicle();
+
+        $booking = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "vehicle" =>  $vehicle->getId(),
+            "users"=> [],
+        ];
+
+        $client->jsonRequest("POST","/vehicles",($booking));
+
+        $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+    }
+
+    /** @test */
+    public function cannotCreateWithNoVehicle(): void
+    {
+        self::ensureKernelShutdown();
+
+        $client = static::createClient();
+
+        $user = $this->getOneUser();
+
+        $booking = [
+            "informations" => "WOLOLO",
+            "isOpen" => "false",
+            "startDate" => "2021-11-12 01:04:06",
+            "endDate" => "2021-11-12 03:04:06",
+            "startMileage" => 1232,
+            "endMileage" => 1432,
+            "isCompleted" => true,
+            "users"=> [$user->getId()],
+        ];
+        $client->jsonRequest("POST","/vehicles",($booking));
+
+        $this->assertResponseStatusCodeSame($client->getResponse()->getStatusCode(), 422);
+    }
+
+    /** @test */
+    public function canUpdateVehicle(): void
+    {
+        self::ensureKernelShutdown();
+
+        $client = static::createClient();
+
+        $booking = self::$repository->findAll()[0];
+
+        $vehicle = $this->getOneVehicle();
+
+        $client->jsonRequest(
+            "PUT",
+            "/bookings/".$booking->getId(),
+            ['vehicle' => $vehicle->getId()]
+        );
+
+        $response = json_decode($client->getResponse()->getContent(),true);
+
+        $updatedBooking = $response["booking"];
+
+        $this->assertEquals($vehicle->getId(), $updatedBooking['vehicle']['id']);
     }
 
 
@@ -187,5 +393,25 @@ class BookingControllerTest extends MerosCrudTestCase
         $client->request('GET','/bookings/'.$firstBooking->getId() + 1);
 
         $this->assertResponseStatusCodeSame(404, $client->getResponse()->getStatusCode());
+    }
+
+    /**
+     * @return mixed|object
+     */
+    private function getOneVehicle(int $offset = 0): mixed
+    {
+        $vehicleRepo = parent::$em->getRepository(Vehicle::class);
+        $vehicle = $vehicleRepo->findAll()[$offset];
+        return $vehicle;
+    }
+
+    /**
+     * @return mixed|object
+     */
+    private function getOneUser(): mixed
+    {
+        $userRepo = parent::$em->getRepository(User::class);
+        $user = $userRepo->findAll()[0];
+        return $user;
     }
 }

@@ -5,9 +5,11 @@ use App\Entity\Booking;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use App\Repository\BookingRepository;
+use App\Repository\UserRepository;
 use App\Repository\VehicleRepository;
 use App\Utils\Req;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,14 +20,17 @@ class BookingController extends MerosController
 
     private BookingRepository $repository;
     private VehicleRepository $vehicleRepository;
+    private UserRepository $userRepository;
 
     function __construct(BookingRepository $repository,
                          VehicleRepository $vehicleRepository,
+                         UserRepository $userRepository,
                          EntityManagerInterface $em,
                          ValidatorInterface $validator){
         parent::__construct($em, $validator);
         $this->repository = $repository;
         $this->vehicleRepository = $vehicleRepository;
+        $this->userRepository = $userRepository;
     }
 
     /**
@@ -100,6 +105,34 @@ class BookingController extends MerosController
                 ,422
             );
 
+            $usersId = $request->get('users');
+
+            if(!$usersId || !count($usersId)) return $this->json(
+                'There is no users associated with this booking.'
+                ,422
+            );
+
+            try{
+                foreach($usersId as $userId){
+                   $user = $this->userRepository->find($userId);
+                   if(!$user) throw new Exception('Cannot find user associated with this booking.');
+
+                   if($this->userRepository->hasAlreadyBookedDuringInterval(
+                       $user,$booking->getStartDate(),
+                       $booking->getEndDate())
+                   ){
+                       throw new Exception("User $user has already booked another car during this interval.");
+                   }
+                   $booking->addUser($user);
+                }
+            }
+            catch(Exception $e){
+                return $this->json(
+                    $e->getMessage()
+                    ,422
+                );
+            }
+
             $booking->setVehicle($vehicle);
 
             $this->em->persist($booking);
@@ -150,6 +183,27 @@ class BookingController extends MerosController
                 );
 
                 $booking->setVehicle($vehicle);
+            }
+
+            $usersId = $request->get('users');
+
+            if($usersId && count($usersId))
+            {
+                try
+                {
+                    foreach($usersId as $userId){
+                        $user = $this->userRepository->find($userId);
+                        if(!$user) throw new Exception;
+                        else $booking->addUser($user);
+                    }
+                }
+                catch(Exception $e)
+                {
+                    return $this->json(
+                        'Cannot find user associated with this booking.'
+                        ,422
+                    );
+                }
             }
 
             $errors = $this->validator->validate($booking);

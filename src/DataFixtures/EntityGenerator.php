@@ -115,7 +115,7 @@ class EntityGenerator
             "McQueen",
             "T-Bone"
         ];
-        $name = $generator->randomElement($carsNames).' '.$generator->randomElement($carsNames).rand(0,1000);
+        $name = $generator->randomElement($carsNames).' '.$generator->randomElement($carsNames).rand(0,1000).rand(0,1000);
 
         $models = '[{"brand": "Seat", "models": ["Alhambra", "Altea", "Altea XL", "Arosa", "Cordoba", "Cordoba Vario", "Exeo", "Ibiza", "Ibiza ST", "Exeo ST", "Leon", "Leon ST", "Inca", "Mii", "Toledo"]},
                     {"brand": "Renault", "models": ["Captur", "Clio", "Clio Grandtour", "Espace", "Express", "Fluence", "Grand Espace", "Grand Modus", "Grand Scenic", "Kadjar", "Kangoo", "Kangoo Express", "Koleos", "Laguna", "Laguna Grandtour", "Latitude", "Mascott", "Mégane", "Mégane CC", "Mégane Combi", "Mégane Grandtour", "Mégane Coupé", "Mégane Scénic", "Scénic", "Talisman", "Talisman Grandtour", "Thalia", "Twingo", "Wind", "Zoé"]},
@@ -195,6 +195,16 @@ class EntityGenerator
         $startMileage = $startDate >= date('now') ? null : rand(0,200000);
         $endMileage = $endDate >= date('now') ? rand(0,200000) : null;
 
+        $isOpen = rand(0,1) > 0.9;
+
+        $user =  $this->manager->getRepository(User::class)->findAll()[0];
+
+        $users = $isOpen ? [
+            $user,
+            $this->manager->getRepository(User::class)->find($user->getId() + 1),
+            $this->manager->getRepository(User::class)->find($user->getId() + 2),
+        ] : [ $user ];
+
         $repo = $this->manager->getRepository(Vehicle::class);
 
         $vehicle = $generator->randomElement($repo->findAll());
@@ -203,13 +213,22 @@ class EntityGenerator
             ->setInformations(rand(0,1) > 0.8 ? $generator->text(300) : null)
             ->setStartDate($startDate)
             ->setEndDate($endDate)
-            ->setIsOpen(rand(0,1) > 0.9)
+            ->setIsOpen($isOpen)
             ->setStartMileage($startMileage)
             ->setEndMileage($endMileage)
             ->setIsCompleted($endDate >= date('now'))
             ->setVehicle($vehicle)
         ;
 
+        foreach($users as $user){
+            $booking->addUser($user);
+        }
+
         return $booking;
+    }
+
+    private function getRandom(string $class):Object{
+        $generator = Factory::create('fr_FR');
+        return $generator->randomElement($this->manager->getRepository($class)->findAll());
     }
 }

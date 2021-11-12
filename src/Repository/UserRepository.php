@@ -2,8 +2,12 @@
 
 namespace App\Repository;
 
+use App\Entity\Booking;
 use App\Entity\User;
+use App\Entity\Vehicle;
+use DateTimeInterface;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\NonUniqueResultException;
 use Doctrine\ORM\NoResultException;
 use Doctrine\Persistence\ManagerRegistry;
@@ -51,6 +55,26 @@ class UserRepository extends ServiceEntityRepository implements PasswordUpgrader
             ->select('count(u.id)')
             ->getQuery()
             ->getSingleScalarResult();
+    }
+
+    /**
+     * @param User $user
+     * @param DateTimeInterface $startDate
+     * @param DateTimeInterface $endDate
+     * @return bool
+     */
+    public function hasAlreadyBookedDuringInterval(
+        User $user,
+        DateTimeInterface $startDate,
+        DateTimeInterface $endDate): bool
+    {
+
+        $bookings = $user->getBookings()->toArray();
+        $bookings = new ArrayCollection($bookings);
+
+        return $bookings->exists(function($i, $booking) use ($endDate, $startDate) {
+            return $booking->getStartDate() >= $startDate && $booking->getEndDate() <= $endDate;
+        });
     }
     // /**
     //  * @return User[] Returns an array of User objects

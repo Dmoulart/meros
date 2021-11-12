@@ -3,6 +3,7 @@
 namespace App\Repository;
 
 use App\Entity\Booking;
+use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
@@ -30,6 +31,15 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
+
+    /*public function getForUser(User $user){
+        return $this->createQueryBuilder('b')
+            ->andWhere('b.users = :val')
+            ->setParameter('val',$user)
+            ->getQuery()
+            ->getResult()
+            ;
+    }*/
     // /**
     //  * @return Booking[] Returns an array of Booking objects
     //  */
