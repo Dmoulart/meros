@@ -22,6 +22,13 @@ class UserControllerTest extends MerosCrudTestCase
         self::resetDatabase(User::class);
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    public static function tearDownAfterClass(): void {
+        self::resetDatabase(User::class);
+    }
+
     /** @test */
     public function create(): void
     {

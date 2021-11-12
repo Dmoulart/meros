@@ -108,7 +108,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private $currentMileage;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Booking::class, mappedBy="users")
+     * @ORM\ManyToMany(targetEntity=Booking::class, mappedBy="users", cascade={"remove"})
+     * @Serializer\Expose
      */
     private $bookings;
 
