@@ -31,7 +31,7 @@ class UserControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function create(): void
+    public function canCreate(): void
     {
         self::ensureKernelShutdown();
 
@@ -57,7 +57,7 @@ class UserControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToCreate(): void
+    public function cannotCreateWithIncompleteInformations(): void
     {
         self::ensureKernelShutdown();
 
@@ -77,13 +77,13 @@ class UserControllerTest extends MerosCrudTestCase
 
 
     /** @test */
-    public function update(): void
+    public function canUpdate(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
 
-        $user = self::$repository->findAll()[0];
+        $user = $this->getOneUser();
 
         $client->jsonRequest(
             "PUT",
@@ -99,13 +99,13 @@ class UserControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToUpdate(): void
+    public function cannotUpdateWithWrongPassword(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
 
-        $user = self::$repository->findAll()[0];
+        $user = $this->getOneUser();
 
         $client->jsonRequest(
             "PUT",
@@ -117,7 +117,7 @@ class UserControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function findAll(): void
+    public function canFindAll(): void
     {
         self::ensureKernelShutdown();
 
@@ -133,15 +133,13 @@ class UserControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function findOne(): void
+    public function canFindOne(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
 
-        $users = self::$repository->findAll();
-
-        $user = $users[2];
+        $user = $this->getOneUser(2);
 
         $client->request('GET','/users/'.$user->getId());
 
@@ -153,7 +151,7 @@ class UserControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToFindOne(): void
+    public function cannotFindOneWithWrongIndex(): void
     {
         self::ensureKernelShutdown();
 

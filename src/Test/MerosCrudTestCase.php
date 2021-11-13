@@ -4,6 +4,7 @@ namespace App\Test;
 
 use App\DataFixtures\AppFixtures;
 use App\Entity\User;
+use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
@@ -41,5 +42,22 @@ abstract class MerosCrudTestCase extends WebTestCase
         (new AppFixtures)->load(self::$em);
     }
 
+    /**
+     * @param int $offset
+     * @return Vehicle
+     */
+    protected function getOneVehicle(int $offset = 0): Vehicle
+    {
+        $vehicleRepo = self::$em->getRepository(Vehicle::class);
+        return $vehicleRepo->findAll()[$offset];
+    }
 
+    /**
+     * @return User
+     */
+    protected function getOneUser(int $offset = 0): User
+    {
+        $userRepo = self::$em->getRepository(User::class);
+        return $userRepo->findAll()[$offset];
+    }
 }

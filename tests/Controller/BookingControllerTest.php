@@ -161,7 +161,7 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function cannotCreateForUnavailableUser(): void
+    public function cannotCreateTwoDuringSameIntervalForSameUser(): void
     {
         self::ensureKernelShutdown();
 
@@ -301,7 +301,7 @@ class BookingControllerTest extends MerosCrudTestCase
 
 
     /** @test */
-    public function update(): void
+    public function canUpdate(): void
     {
         self::ensureKernelShutdown();
 
@@ -323,7 +323,7 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToUpdate(): void
+    public function cannotUpdateWithWrongMileageValues(): void
     {
         self::ensureKernelShutdown();
 
@@ -341,7 +341,7 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function findAll(): void
+    public function canFindAll(): void
     {
         self::ensureKernelShutdown();
 
@@ -357,7 +357,7 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function findOne(): void
+    public function canFindOne(): void
     {
         self::ensureKernelShutdown();
 
@@ -380,7 +380,7 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToFindOne(): void
+    public function cannotFindOneWithWrongIndex(): void
     {
         self::ensureKernelShutdown();
 
@@ -395,23 +395,5 @@ class BookingControllerTest extends MerosCrudTestCase
         $this->assertResponseStatusCodeSame(404, $client->getResponse()->getStatusCode());
     }
 
-    /**
-     * @return mixed|object
-     */
-    private function getOneVehicle(int $offset = 0): mixed
-    {
-        $vehicleRepo = parent::$em->getRepository(Vehicle::class);
-        $vehicle = $vehicleRepo->findAll()[$offset];
-        return $vehicle;
-    }
 
-    /**
-     * @return mixed|object
-     */
-    private function getOneUser(): mixed
-    {
-        $userRepo = parent::$em->getRepository(User::class);
-        $user = $userRepo->findAll()[0];
-        return $user;
-    }
 }

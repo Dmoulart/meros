@@ -36,7 +36,7 @@ class VehicleControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function create(): void
+    public function canCreate(): void
     {
         self::ensureKernelShutdown();
 
@@ -65,7 +65,7 @@ class VehicleControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToCreate(): void
+    public function cannotCreateWithWrongMileageValue(): void
     {
         self::ensureKernelShutdown();
 
@@ -74,7 +74,7 @@ class VehicleControllerTest extends MerosCrudTestCase
         $vehicle = [
             "model" => "159",
             "color" => "5437c9",
-            "mileage" => -47010, // We use a non conform value
+            "mileage" => -47010,
             "seats" => 2,
             "fuelType" => "diesel",
             "city" => "Torres",
@@ -90,13 +90,13 @@ class VehicleControllerTest extends MerosCrudTestCase
 
 
     /** @test */
-    public function update(): void
+    public function canUpdate(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
 
-        $vehicle = self::$repository->findAll()[0];
+        $vehicle = $this->getOneVehicle();
 
         $client->jsonRequest(
             "PUT",
@@ -105,20 +105,20 @@ class VehicleControllerTest extends MerosCrudTestCase
         );
 
         $response = json_decode($client->getResponse()->getContent(),true);
-        // dd($response);
+
         $updatedVehicle = $response["vehicle"];
 
         $this->assertEquals("WOLOLO", $updatedVehicle['name']);
     }
 
     /** @test */
-    public function failToUpdate(): void
+    public function cannotUpdateWithWrongColorValue(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
 
-        $vehicle = self::$repository->findAll()[0];
+        $vehicle = $this->getOneVehicle();
 
         $client->jsonRequest(
             "PUT",
@@ -130,7 +130,7 @@ class VehicleControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function findAll(): void
+    public function canFindAll(): void
     {
         self::ensureKernelShutdown();
 
@@ -146,18 +146,13 @@ class VehicleControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function findOne(): void
+    public function canFindOne(): void
     {
         self::ensureKernelShutdown();
 
         $client = static::createClient();
 
-        $vehicles = self::$repository->findAll();
-
-        /**
-         * @var Vehicle $vehicle
-         */
-        $vehicle = $vehicles[2];
+        $vehicle =  $this->getOneVehicle(2);
 
         $client->request('GET','/vehicles/'.$vehicle->getId());
 
@@ -169,7 +164,7 @@ class VehicleControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function failToFindOne(): void
+    public function cannotFindOneWithWrongIndex(): void
     {
         self::ensureKernelShutdown();
 
