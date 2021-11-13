@@ -39,10 +39,10 @@ class VehicleRepository extends ServiceEntityRepository
         /**
          * @var BookingRepository $bookingRepository
          */
-        $bookingRepository = $this->getEntityManager()->getRepository(Booking::class);
+         // $bookingRepository = $this->getEntityManager()->getRepository(Booking::class);
 
-        $bookings = $bookingRepository->getForVehicle($vehicle);
-        $bookings = new ArrayCollection($bookings);
+        $bookings = $vehicle->getBookings();
+        // $bookings = new ArrayCollection($bookings);
 
         return !$bookings->exists(function($i, $booking) use ($endDate, $startDate) {
             return $booking->getStartDate() >= $startDate && $booking->getEndDate() <= $endDate;
