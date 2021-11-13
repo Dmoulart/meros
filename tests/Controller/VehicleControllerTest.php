@@ -3,6 +3,7 @@
 namespace App\Tests\Controller;
 
 use App\Entity\Booking;
+use App\Entity\Expanse;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use App\Test\MerosCrudTestCase;
@@ -16,6 +17,7 @@ class VehicleControllerTest extends MerosCrudTestCase
     {
         parent::setUpBeforeClass();
         self::resetDatabase(Booking::class);
+        self::resetDatabase(Expanse::class);
         self::resetDatabase(Vehicle::class);
     }
 
@@ -24,6 +26,7 @@ class VehicleControllerTest extends MerosCrudTestCase
      */
     public function setUp(): void {
         self::resetDatabase(Booking::class);
+        self::resetDatabase(Expanse::class);
         self::resetDatabase(Vehicle::class);
     }
 
@@ -32,6 +35,7 @@ class VehicleControllerTest extends MerosCrudTestCase
      */
     public static function tearDownAfterClass(): void {
         self::resetDatabase(Booking::class);
+        self::resetDatabase(Expanse::class);
         self::resetDatabase(Vehicle::class);
     }
 

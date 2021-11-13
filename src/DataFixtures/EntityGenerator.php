@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Booking;
+use App\Entity\Expanse;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use DateInterval;
@@ -39,6 +40,7 @@ class EntityGenerator
             User::class => $this->generateUser(),
             Vehicle::class => $this->generateVehicle(),
             Booking::class => $this->generateBooking(),
+            Expanse::class => $this->generateExpanse(),
             default => null,
         };
     }
@@ -230,5 +232,31 @@ class EntityGenerator
     private function getRandom(string $class):Object{
         $generator = Factory::create('fr_FR');
         return $generator->randomElement($this->manager->getRepository($class)->findAll());
+    }
+
+    private function generateExpanse(): Expanse
+    {
+        $generator = Factory::create('fr_FR');
+
+        $expanse = new Expanse();
+        $reasons = [
+            'réparation',
+            'entretien',
+            'contrôle technique'
+        ];
+
+        $repo = $this->manager->getRepository(Vehicle::class);
+
+        $vehicle = $generator->randomElement($repo->findAll());
+
+        $expanse
+            ->setReason($generator->randomElement($reasons))
+            ->setAmount($generator->randomFloat(2,10,1000))
+            ->setDetails($generator->text)
+            ->setIsSettled(rand(0,1) > 0.5)
+            ->setVehicle($vehicle)
+        ;
+
+        return $expanse;
     }
 }

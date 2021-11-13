@@ -3,6 +3,7 @@
 namespace App\DataFixtures;
 
 use App\Entity\Booking;
+use App\Entity\Expanse;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\FixturesBundle\Fixture;
@@ -20,6 +21,7 @@ class AppFixtures extends Fixture
         $this->createUsers($manager);
         $this->createVehicles($manager);
         $this->createBookings($manager);
+        $this->createExpanses($manager);
     }
 
     /**
@@ -68,6 +70,17 @@ class AppFixtures extends Fixture
 
         foreach($bookings as $booking){
             $manager->persist($booking);
+        }
+
+        $manager->flush();
+    }
+
+    private function createExpanses(ObjectManager $manager)
+    {
+        $expanses = static::$entityGenerator->generate(Expanse::class);
+
+        foreach($expanses as $expanse){
+            $manager->persist($expanse);
         }
 
         $manager->flush();

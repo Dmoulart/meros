@@ -14,7 +14,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 
 /**
  * @ORM\Entity(repositoryClass=VehicleRepository::class)
- * @Serializer\ExclusionPolicy("ALL")
  */
 class Vehicle
 {
@@ -134,9 +133,16 @@ class Vehicle
      */
     private $bookings;
 
+    /**
+     * @ORM\OneToMany(targetEntity=Expanse::class, mappedBy="vehicle", cascade={"remove"})
+     * @Serializer\Expose
+     */
+    private $expanses;
+
     public function __construct()
     {
         $this->bookings = new ArrayCollection();
+        $this->expanses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -297,5 +303,35 @@ class Vehicle
     public function __toString(): string
     {
         return $this->getName()." ".$this->getBrand()." ".$this->getModel();
+    }
+
+    /**
+     * @return Collection|Expanse[]
+     */
+    public function getExpanses(): Collection
+    {
+        return $this->expanses;
+    }
+
+    public function addExpanse(Expanse $expanse): self
+    {
+        if (!$this->expanses->contains($expanse)) {
+            $this->expanses[] = $expanse;
+            $expanse->setVehicle($this);
+        }
+
+        return $this;
+    }
+
+    public function removeExpanse(Expanse $expanse): self
+    {
+        if ($this->expanses->removeElement($expanse)) {
+            // set the owning side to null (unless already changed)
+            if ($expanse->getVehicle() === $this) {
+                $expanse->setVehicle(null);
+            }
+        }
+
+        return $this;
     }
 }

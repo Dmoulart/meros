@@ -88,14 +88,12 @@ class Booking
 
     /**
      * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="bookings", fetch="EAGER")
-     * @Serializer\MaxDepth(1)
      * @Serializer\Expose
      */
     private $vehicle;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="bookings", fetch="EAGER")
-     * @Serializer\MaxDepth(1)
      * @Serializer\Expose
      */
     private $users;
