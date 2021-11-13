@@ -3,6 +3,7 @@
 namespace App\Test;
 
 use App\DataFixtures\AppFixtures;
+use App\Entity\Expanse;
 use App\Entity\User;
 use App\Entity\Vehicle;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepositoryInterface;
@@ -59,5 +60,15 @@ abstract class MerosCrudTestCase extends WebTestCase
     {
         $userRepo = self::$em->getRepository(User::class);
         return $userRepo->findAll()[$offset];
+    }
+
+    /**
+     * @param int $offset
+     * @return Vehicle
+     */
+    protected function getOneExpanse(int $offset = 0): Expanse
+    {
+        $expanseRepo = self::$em->getRepository(Expanse::class);
+        return $expanseRepo->findAll()[$offset];
     }
 }

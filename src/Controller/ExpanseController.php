@@ -59,7 +59,7 @@ class ExpanseController extends MerosController
 
         return $this->json([
             $id ? 'expanses successfully deleted' : 'expanse successfully deleted',
-            "expanses" => $deletedExpanses
+            "expanse" => $deletedExpanses
         ]);
     }
 
@@ -102,7 +102,7 @@ class ExpanseController extends MerosController
 
             return $this->json([
                 'Expanse successfully created',
-                'Expanse' =>  $expanse,
+                'expanse' =>  $expanse,
             ]);
     }
 

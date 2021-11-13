@@ -36,13 +36,7 @@ class VehicleRepository extends ServiceEntityRepository
         DateTimeInterface $startDate,
         DateTimeInterface $endDate): bool
     {
-        /**
-         * @var BookingRepository $bookingRepository
-         */
-         // $bookingRepository = $this->getEntityManager()->getRepository(Booking::class);
-
         $bookings = $vehicle->getBookings();
-        // $bookings = new ArrayCollection($bookings);
 
         return !$bookings->exists(function($i, $booking) use ($endDate, $startDate) {
             return $booking->getStartDate() >= $startDate && $booking->getEndDate() <= $endDate;
