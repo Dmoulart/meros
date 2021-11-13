@@ -102,9 +102,7 @@ class UserController extends MerosController
             );
 
             /** @var User $user */
-            $user = Req::toEntity($request, User::class, [
-                'ignore' => ['password']
-            ], $user);
+            $user = Req::toEntity($request, User::class, null, $user);
 
             $errors = $this->validator->validate($user);
 

@@ -89,21 +89,14 @@ class BookingController extends MerosController
                 ,422
             );
 
-            $vehicle = $this->vehicleRepository->find($vehicleId);
-
-            if(!$vehicle) return $this->json(
-                "Cannot find the vehicle associated with this booking."
-                ,404
-            );
-
-            if(!$this->vehicleRepository->isAvailableDuringInterval(
-                $vehicle,
-                $booking->getStartDate(),
-                $booking->getEndDate())
-            ) return $this->json(
-                "The vehicle $vehicle is not available during this time interval."
-                ,422
-            );
+            try
+            {
+                $booking = $this->addVehicle($vehicleId, $booking);
+            }
+            catch (Exception $e)
+            {
+                return $this->json($e->getMessage(),$e->getCode());
+            }
 
             $usersId = $request->get('users');
 
@@ -112,28 +105,17 @@ class BookingController extends MerosController
                 ,422
             );
 
-            try{
-                foreach($usersId as $userId){
-                   $user = $this->userRepository->find($userId);
-                   if(!$user) throw new Exception('Cannot find user associated with this booking.');
-
-                   if($this->userRepository->hasAlreadyBookedDuringInterval(
-                       $user,$booking->getStartDate(),
-                       $booking->getEndDate())
-                   ){
-                       throw new Exception("User $user has already booked another car during this interval.");
-                   }
-                   $booking->addUser($user);
-                }
+            try
+            {
+                $booking = $this->addUsers($usersId,$booking);
             }
-            catch(Exception $e){
+            catch(Exception $e)
+            {
                 return $this->json(
                     $e->getMessage()
                     ,422
                 );
             }
-
-            $booking->setVehicle($vehicle);
 
             $this->em->persist($booking);
 
@@ -160,47 +142,33 @@ class BookingController extends MerosController
             /** @var Booking $booking */
             $booking = Req::toEntity($request,
                 Booking::class,
-                null,
+                ["ignore" => ["vehicle"]],
                 $booking
             );
 
             //todo : factorize this (same in create)
-            if(($vehicleId = $request->get('vehicle'))){
-                $vehicle = $this->vehicleRepository->find($vehicleId);
-
-                if(!$vehicle) return $this->json(
-                    "Cannot find the vehicle associated with this booking."
-                    ,404
-                );
-
-                if(!$this->vehicleRepository->isAvailableDuringInterval(
-                    $vehicle,
-                    $booking->getStartDate(),
-                    $booking->getEndDate())
-                ) return $this->json(
-                    "The vehicle $vehicle is not available during this time interval."
-                    ,422
-                );
-
-                $booking->setVehicle($vehicle);
-            }
-
-            $usersId = $request->get('users');
-
-            if($usersId && count($usersId))
+            if(($vehicleId = $request->get('vehicle')))
             {
                 try
                 {
-                    foreach($usersId as $userId){
-                        $user = $this->userRepository->find($userId);
-                        if(!$user) throw new Exception;
-                        else $booking->addUser($user);
-                    }
+                    $booking = $this->addVehicle($vehicleId, $booking);
+                }
+                catch (Exception $e)
+                {
+                    return $this->json($e->getMessage(),$e->getCode());
+                }
+            }
+
+            if(($usersId = $request->get('users')) && count($usersId))
+            {
+                try
+                {
+                    $booking = $this->addUsers($usersId,$booking);
                 }
                 catch(Exception $e)
                 {
                     return $this->json(
-                        'Cannot find user associated with this booking.'
+                        $e->getMessage()
                         ,422
                     );
                 }
@@ -214,9 +182,60 @@ class BookingController extends MerosController
 
             $this->em->flush();
 
-            return $this->json([
-                'Booking successfully updated',
-                'booking' =>  $booking,
-            ]);
+        return $this->json([
+            'Booking successfully updated',
+            'booking' =>  $booking,
+        ]);
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addUsers(array $usersIds, Booking $booking): Booking
+    {
+        $clonedBooking = clone $booking;
+
+        foreach ($usersIds as $userId) {
+            $user = $this->userRepository->find($userId);
+
+            if (!$user) throw new Exception('Cannot find user associated with this booking.');
+
+            if ($this->userRepository->hasAlreadyBookedDuringInterval(
+                $user, $clonedBooking->getStartDate(),
+                $clonedBooking->getEndDate())
+            ) {
+                throw new Exception("User $user has already booked another car during this interval.");
+            }
+
+            $clonedBooking->addUser($user);
+        }
+        return $clonedBooking;
+    }
+
+    /**
+     * @throws Exception
+     */
+    private function addVehicle(int $vehicleId, Booking $booking): Booking
+    {
+        $clonedBooking = clone $booking;
+
+        $vehicle = $this->vehicleRepository->find($vehicleId);
+
+        if(!$vehicle)
+        {
+            throw new Exception("Cannot find the vehicle associated with this booking.", 404);
+        }
+        if(!$this->vehicleRepository->isAvailableDuringInterval(
+            $vehicle,
+            $clonedBooking->getStartDate(),
+            $clonedBooking->getEndDate())
+        )
+        {
+            throw new Exception("The vehicle $vehicle is not available during this time interval.", 422);
+        }
+
+        $clonedBooking->setVehicle($vehicle);
+
+        return $clonedBooking;
     }
 }

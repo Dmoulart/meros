@@ -43,7 +43,7 @@ class Req
 
         foreach($properties as $property)
         {
-            if(isset($params['ignore']) && in_array($property, $params['ignore']))
+            if(isset($params['ignore']) && in_array($property->getName(), $params['ignore']))
                 continue;
 
             $attributeSetter = 'set'.ucfirst($property->getName());

@@ -57,7 +57,7 @@ class BookingControllerTest extends MerosCrudTestCase
         $client->jsonRequest("POST","/bookings",($booking));
 
         $response = json_decode($client->getResponse()->getContent(),true);
-
+        // dump($response);
         $createdBooking = $response["booking"];
 
         $this->assertEquals($booking['informations'], $createdBooking['informations']);
