@@ -31,7 +31,7 @@ class AppFixtures extends Fixture
     {
         $admin = new User;
 
- /*       $admin
+        $admin
             ->setPassword('123456')
             ->setRoles(['ROLE_USER', 'ROLE_ADMIN'])
             ->setPseudo('Rick')
@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
             ->setCurrentMileage(450)
             ->setShare(500);
 
-        $manager->persist($admin);*/
+        $manager->persist($admin);
 
 
         $users = static::$entityGenerator->generate(User::class);

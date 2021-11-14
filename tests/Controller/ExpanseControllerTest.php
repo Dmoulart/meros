@@ -19,6 +19,7 @@ class ExpanseControllerTest extends MerosCrudTestCase
         self::resetDatabase(Booking::class);
         self::resetDatabase(Expanse::class);
         self::resetDatabase(Vehicle::class);
+        //Todo : find a better way to assign repo
         self::$repository = self::$em->getRepository(Expanse::class);
     }
 

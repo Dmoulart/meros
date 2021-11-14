@@ -17,3 +17,6 @@ composer update --ignore-platform-reqs
 
 == update db
 php bin/console d:s:u -f
+
+== private and public key
+php bin/console lexik:jwt:generate-keypair
