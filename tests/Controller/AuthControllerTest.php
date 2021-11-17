@@ -55,6 +55,7 @@ class AuthControllerTest extends MerosCrudTestCase
     /** @test */
     public function canCreateLogAndExtractUserFromToken(): void
     {
+        // Todo: Split this test methods
         self::ensureKernelShutdown();
 
         $client = static::createClient();
@@ -84,12 +85,12 @@ class AuthControllerTest extends MerosCrudTestCase
 
         $token = $response['token'];
         //Todo: When we'll implement the authorizations on the different controllers we'll need
-        // to refactor this to authorize the client before passing the test
+        // to refactor this and use this to authorize the client before passing every test
         $client->setServerParameter('HTTP_AUTHORIZATION', sprintf("Bearer %s", $token));
 
         $client->jsonRequest("GET","/me");
 
-        $response =  json_decode($client->getResponse()->getContent(),true);
+        $response = json_decode($client->getResponse()->getContent(),true);
 
         $username = $response['username'];
 
