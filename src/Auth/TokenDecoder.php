@@ -2,22 +2,34 @@
 
 namespace App\Auth;
 
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
 use Lexik\Bundle\JWTAuthenticationBundle\Services\JWTTokenManagerInterface;
-use Symfony\Component\Security\Core\Authentication\Token\Storage\TokenStorageInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 class TokenDecoder
 {
-    private JWTTokenManagerInterface $jwtManager;
-    private TokenStorageInterface $tokenStorageInterface;
+    private JWTEncoderInterface $jwtEncoder;
 
-    public function __construct(TokenStorageInterface $tokenStorageInterface, JWTTokenManagerInterface $jwtManager)
+    public function __construct(JWTEncoderInterface $jwtEncoder)
     {
-        $this->jwtManager = $jwtManager;
-        $this->tokenStorageInterface = $tokenStorageInterface;
+        $this->jwtEncoder = $jwtEncoder;
     }
 
-    public function decode($token): bool|array
+    /**
+     * Extract the user from a request by decoding the jwt token.
+     * @param Request $request
+     * @return bool|array
+     */
+    public function getUserFromHeader(Request $request): bool|array
     {
-        return $this->jwtManager->decode($token);
+        $authorizationHeader = $request->headers->get('Authorization');
+        list(,$token) = explode(' ',$authorizationHeader);
+        try {
+            $user = $this->jwtEncoder->decode($token);
+        } catch (JWTDecodeFailureException $e) {
+            return $e->getMessage();
+        }
+        return $user;
     }
 }

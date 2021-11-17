@@ -2,19 +2,30 @@
 namespace App\Controller;
 
 use App\Auth\TokenDecoder;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Doctrine\ORM\EntityManagerInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Encoder\JWTEncoderInterface;
+use Lexik\Bundle\JWTAuthenticationBundle\Exception\JWTDecodeFailureException;
+use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class AuthController extends MerosController
 {
+    private TokenDecoder $tokenDecoder;
+
+    public function __construct(EntityManagerInterface $em, ValidatorInterface $validator, TokenDecoder $tokenDecoder)
+    {
+        parent::__construct($em, $validator);
+        $this->tokenDecoder = $tokenDecoder;
+    }
 
     /**
      * @Route("/me", name="app_me", methods={"GET"})
      */
-    public function me(Request $request, TokenDecoder $decoder){
-        $token = $request->headers->get('Authorization');
-        $token = $request->get
-        return $this->json($decoder->decode($token));
+    public function me(Request $request): JsonResponse
+    {
+        $user = $this->tokenDecoder->getUserFromHeader($request);
+        return $this->json($user);
     }
 }

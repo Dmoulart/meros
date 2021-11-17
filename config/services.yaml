@@ -20,5 +20,13 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
             - '../src/Tests/'
+
+       # app.jwt_authenticator:
+            #autowire: false     # uncomment if you had autowire enabled.
+            #autoconfigure: false
+            #public: false
+        #    parent: lexik_jwt_authentication.security.guard.jwt_token_authenticator
+        #    class: App\Security\JWTAuthenticator
+        #    arguments: [ '@lexik_jwt_authentication.jwt_manager' ]
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
