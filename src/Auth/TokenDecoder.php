@@ -23,13 +23,19 @@ class TokenDecoder
      */
     public function getUserFromHeader(Request $request): bool|array
     {
-        $authorizationHeader = $request->headers->get('Authorization');
-        list(,$token) = explode(' ',$authorizationHeader);
-        try {
+        try
+        {
+            $authorizationHeader = $request->headers->get('Authorization');
+
+            list(,$token) = explode(' ',$authorizationHeader);
+
             $user = $this->jwtEncoder->decode($token);
-        } catch (JWTDecodeFailureException $e) {
+        }
+        catch (JWTDecodeFailureException $e)
+        {
             return $e->getMessage();
         }
+
         return $user;
     }
 }
