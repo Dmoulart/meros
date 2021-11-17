@@ -29,7 +29,7 @@ class AppFixtures extends Fixture
      */
     private function createUsers(ObjectManager $manager): void
     {
-        $admin = new User;
+        /*$admin = new User;
 
         $admin
             ->setPassword('123456')
@@ -41,7 +41,7 @@ class AppFixtures extends Fixture
             ->setCurrentMileage(450)
             ->setShare(500);
 
-        $manager->persist($admin);
+        $manager->persist($admin);*/
 
 
         $users = static::$entityGenerator->generate(User::class);
