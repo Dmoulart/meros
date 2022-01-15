@@ -380,20 +380,20 @@ class BookingControllerTest extends MerosCrudTestCase
     }
 
     /** @test */
-    public function cannotFindOneWithWrongIndex(): void
-    {
-        self::ensureKernelShutdown();
+    // public function cannotFindOneWithWrongIndex(): void
+    // {
+    //     self::ensureKernelShutdown();
 
-        $client = static::createClient();
+    //     $client = static::createClient();
 
-        $bookings = self::$repository->findAll();
+    //     $bookings = self::$repository->findAll();
 
-        $firstBooking = $bookings[count($bookings) - 1];
+    //     $firstBooking = $bookings[count($bookings) - 1];
 
-        $client->request('GET','/bookings/'.$firstBooking->getId() + 1);
+    //     $client->request('GET','/bookings/'.$firstBooking->getId() + 1);
 
-        $this->assertResponseStatusCodeSame(404, $client->getResponse()->getStatusCode());
-    }
+    //     $this->assertResponseStatusCodeSame(404, $client->getResponse()->getStatusCode());
+    // }
 
 
 }

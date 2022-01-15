@@ -21,7 +21,7 @@ class TokenDecoder
      * @param Request $request
      * @return bool|array
      */
-    public function getUserFromHeader(Request $request): bool|array
+    public function getUserDataFromHeader(Request $request): bool|array
     {
         try
         {

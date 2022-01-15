@@ -92,9 +92,9 @@ class AuthControllerTest extends MerosCrudTestCase
 
         $response = json_decode($client->getResponse()->getContent(),true);
 
-        $username = $response['username'];
+        $email = $response['user']['email'];
 
-        $this->assertEquals($username, $authData['username']);
+        $this->assertEquals($email, $authData['username']);
     }
 
 }
