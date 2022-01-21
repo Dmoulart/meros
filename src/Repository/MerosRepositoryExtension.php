@@ -35,4 +35,11 @@ trait MerosRepositoryExtension
             :
             $this->findAll();
     }
+
+    public function findRange(array $range): array|Object|null
+    {
+        $items = $this->findAll();
+        return array_slice($items, $range[0], $range[1]);
+    }
+
 }

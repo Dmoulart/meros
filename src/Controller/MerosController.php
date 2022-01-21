@@ -11,9 +11,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class MerosController extends AbstractController
 {
-
     protected EntityManagerInterface $em;
-
     protected ValidatorInterface $validator;
 
     function __construct(EntityManagerInterface $em, ValidatorInterface $validator){

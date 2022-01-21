@@ -14,6 +14,7 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use Knp\Component\Pager\PaginatorInterface;
 
 class BookingController extends MerosController
 {
@@ -21,29 +22,51 @@ class BookingController extends MerosController
     private BookingRepository $repository;
     private VehicleRepository $vehicleRepository;
     private UserRepository $userRepository;
+    private PaginatorInterface $paginator;
 
     function __construct(BookingRepository $repository,
-                         VehicleRepository $vehicleRepository,
-                         UserRepository $userRepository,
-                         EntityManagerInterface $em,
-                         ValidatorInterface $validator){
+                        VehicleRepository $vehicleRepository,
+                        UserRepository $userRepository,
+                        EntityManagerInterface $em,
+                        ValidatorInterface $validator,
+                        PaginatorInterface $paginator){
         parent::__construct($em, $validator);
         $this->repository = $repository;
         $this->vehicleRepository = $vehicleRepository;
         $this->userRepository = $userRepository;
+        $this->paginator = $paginator;
     }
 
     /**
-     * @Route("/bookings/{id}", name="app_bookings_get", methods={"GET"})
+     * @Route("/bookings", name="app_bookings_get", methods={"GET"})
      */
-    function find(int|string|null $id = null): Response
+    function findSome(Request $request): Response
     {
-        $bookings = $this->repository->findOneOrAll($id);
+        $bookings = $this->repository->findAll();
 
-        if(!$bookings) return $this->json(
-             $id ? 'Cannot find booking with this id' : 'Cannot find bookings'
-            ,404
+        $page = $request->get('page') ?? 1;
+
+        if(!$bookings) return $this->json('Cannot find bookings', 404);
+
+        $response = $this->paginator->paginate(
+            $bookings, 
+            $page, 
+            5
         );
+
+        if(!count($response)) return $this->json('Cannot find bookings', 404);
+
+        return $this->json($response);
+    }
+
+    /**
+     * @Route("/bookings/{id}", name="app_bookings_getOne", methods={"GET"}, requirements={"id"="\d+"})
+     */
+    function findOne(int $id): Response
+    {
+        $bookings = $this->repository->find($id);
+
+        if(!$bookings) return $this->json('Cannot find booking with this id',404);
 
         return $this->json($bookings);
     }
@@ -85,7 +108,7 @@ class BookingController extends MerosController
             $vehicleId = $request->get('vehicle');
 
             if(!$vehicleId) return $this->json(
-                 'There is no vehicle associated with this booking.'
+                'There is no vehicle associated with this booking.'
                 ,422
             );
 

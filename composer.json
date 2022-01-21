@@ -15,6 +15,7 @@
         "doctrine/orm": "^2.10",
         "fzaninotto/faker": "^1.9",
         "jms/serializer": "^3.15",
+        "knplabs/knp-paginator-bundle": "^5.8",
         "lexik/jwt-authentication-bundle": "^2.13",
         "nelmio/cors-bundle": "^2.1",
         "phpdocumentor/reflection-docblock": "^5.3",
