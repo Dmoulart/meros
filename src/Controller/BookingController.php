@@ -51,7 +51,7 @@ class BookingController extends MerosController
         $response = $this->paginator->paginate(
             $bookings, 
             $page, 
-            5
+            10
         );
 
         if(!count($response)) return $this->json('Cannot find bookings', 404);

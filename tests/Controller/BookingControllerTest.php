@@ -85,11 +85,11 @@ class BookingControllerTest extends MerosCrudTestCase
 
         $client->jsonRequest("POST","/bookings",($booking));
 
-        $response = json_decode($client->getResponse()->getContent(),true);
+        $response = json_decode($client->getResponse()->getContent(), true);
 
         $createdBooking = $response["booking"];
 
-        $this->assertEquals($user->getEmail(), $createdBooking['users'][0]['email']);
+        $this->assertContains($user->getId(), $createdBooking['usersId']);
     }
 
     /** @test */
@@ -118,7 +118,7 @@ class BookingControllerTest extends MerosCrudTestCase
 
         $createdBooking = $response["booking"];
 
-        $this->assertEquals($vehicle->getModel(), $createdBooking['vehicle']['model']);
+        $this->assertEquals($vehicle->getId(), $createdBooking['vehicleId']);
     }
 
     /** @test */
@@ -296,7 +296,7 @@ class BookingControllerTest extends MerosCrudTestCase
 
         $updatedBooking = $response["booking"];
 
-        $this->assertEquals($vehicle->getId(), $updatedBooking['vehicle']['id']);
+        $this->assertEquals($vehicle->getId(), $updatedBooking['vehicleId']);
     }
 
 

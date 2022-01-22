@@ -9,14 +9,18 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
+use JMS\Serializer\Annotation\Accessor;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Serializer\Annotation\MaxDepth;
+use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
 /**
+ * Booking model.
+ * TODO: Handle the depth of the serialization better. Relations must only be returned as id. The current method to do this
+ * is quite hugly, find a more appropriate one.
  * @ORM\Entity(repositoryClass=BookingRepository::class)
- * @Serializer\ExclusionPolicy("ALL")
  */
 class Booking
 {
@@ -87,14 +91,18 @@ class Booking
     private $isCompleted;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="bookings", fetch="EAGER")
+     * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="bookings")
      * @Serializer\Expose
+     * @Accessor(getter="getVehicleId")
+     * @Ignore
      */
     private $vehicle;
 
     /**
-     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="bookings", fetch="EAGER")
+     * @ORM\ManyToMany(targetEntity=User::class, inversedBy="bookings")
      * @Serializer\Expose
+     * @Accessor(getter="getUsersId")
+     * @Ignore
      */
     private $users;
 
@@ -213,18 +221,31 @@ class Booking
 
     public function setVehicle(Vehicle | int $vehicle): self
     {
-
         $this->vehicle = $vehicle;
 
         return $this;
     }
 
+    public function getVehicleId(): ?int
+    {
+        return $this->vehicle->getId() ?? null;
+    }
     /**
      * @return Collection|User[]
      */
     public function getUsers(): Collection
     {
         return $this->users;
+    }
+
+    /**
+     * @return array
+     */
+    public function getUsersId(): array
+    {
+        return $this->users->map(function($user){
+            return $user->getId();
+        })->toArray();
     }
 
     public function addUser(User $user): self
