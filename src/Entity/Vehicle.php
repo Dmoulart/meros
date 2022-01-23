@@ -20,7 +20,7 @@ class Vehicle
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $id;
 
@@ -29,7 +29,7 @@ class Vehicle
      *     message="Une voiture doit avoir un nom."
      * )
      * @ORM\Column(type="string", length=40, unique=true)
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $name;
 
@@ -42,7 +42,7 @@ class Vehicle
      *      maxMessage = "Le nom de la marque de la voiture ne peut pas compter plus de 30 caractères."
      * )
      * @ORM\Column(type="string", length=30)
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $brand;
 
@@ -55,7 +55,7 @@ class Vehicle
      *      maxMessage = "Le nom de modèle de la voiture ne peut pas compter plus de 40 caractères."
      * )
      * @ORM\Column(type="string", length=60)
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $model;
 
@@ -66,7 +66,7 @@ class Vehicle
      *     "/([a-f0-9]{3}){1,2}\b/i",
      *      message="La couleur doit être au format hexadécimal."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $color;
 
@@ -75,7 +75,7 @@ class Vehicle
      * @Assert\PositiveOrZero(
      *     message="Le kilométrage ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $mileage;
 
@@ -85,7 +85,7 @@ class Vehicle
      * @Assert\PositiveOrZero(
      *     message="Le nombre de places ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $seats;
 
@@ -96,21 +96,21 @@ class Vehicle
      *     {"gasoline", "diesel", "electricity"},
      *     message="Le type de carburant n'est pas reconnu."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $fuelType;
 
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=30)
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $city;
 
     /**
      * @Assert\NotBlank
      * @ORM\Column(type="string", length=80)
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $street;
 
@@ -119,7 +119,7 @@ class Vehicle
      * @Assert\Positive(
      *     message="Le numéro de rue ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $streetNumber;
 

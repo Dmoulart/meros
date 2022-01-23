@@ -27,7 +27,7 @@ class Booking
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $id;
 
@@ -37,13 +37,13 @@ class Booking
      *      max = 400,
      *      maxMessage = "Les informations de la réservations ne peuvent excéder 400 caractères."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $informations;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $isOpen;
 
@@ -52,7 +52,7 @@ class Booking
      * @Assert\NotNull(
      *     message="La date de départ doit respecter le format 'Année-Mois-Jour Heure:Minutes:Secondes'."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $startDate;
 
@@ -61,7 +61,7 @@ class Booking
      * @Assert\NotNull(
      *     message="La date d'arrivée doit respecter le format 'Année-Mois-Jour Heure:Minutes:Secondes'."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $endDate;
 
@@ -70,7 +70,7 @@ class Booking
      * @Assert\PositiveOrZero(
      *     message="Le kilométrage de début de réservation ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $startMileage;
 
@@ -79,20 +79,20 @@ class Booking
      * @Assert\PositiveOrZero(
      *     message="Le kilométrage de fin de réservation ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $endMileage;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $isCompleted;
 
 
     /**
      * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="bookings")
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $vehicle;
 

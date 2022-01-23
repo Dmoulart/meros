@@ -23,6 +23,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
      * @Groups({"booking_read"})
+     * @Groups({"user_read"})
      */
     private $id;
 
@@ -35,14 +36,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Email(
      *     message = "L'email '{{ value }}' n'est pas valide."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
+     * @Groups({"user_read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
      * @Assert\NotBlank
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $roles = ["ROLE_USER"];
 
@@ -72,7 +74,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *     message="Un utilisateur doit avoir un nom."
      * )
      * @Assert\NotBlank
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $names;
 
@@ -84,33 +86,34 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      minMessage = "Votre pseudonyme doit compter 3 caractères au minimum.",
      *      maxMessage = "Votre pseudonyme ne peut pas compter plus de 40 caractères."
      * )
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $share;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $estimatedMileage;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Groups({"booking_read"})
+     * @Groups({"booking_read", "user_read"})
      */
     private $currentMileage;
 
     /**
      * @ORM\ManyToMany(targetEntity=Booking::class, mappedBy="users", cascade={"remove"})
      * @Serializer\Expose
+     * @Groups({"user_read"})
      */
     private $bookings;
 

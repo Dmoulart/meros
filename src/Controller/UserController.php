@@ -34,7 +34,7 @@ class UserController extends MerosController
             ,404
         );
 
-        return $this->json($users);
+        return $this->json($users, 200, [], ['groups' => ['user_read']]);
     }
 
     /**
@@ -55,7 +55,7 @@ class UserController extends MerosController
 
         return $this->json([
             $id ? 'User successfully deleted' : 'Users successfully deleted',
-            "users" => $deletedUsers]
+            "users" => $deletedUsers], 200, [], ['groups' => ['user_read']]
         );
     }
 
@@ -86,7 +86,7 @@ class UserController extends MerosController
             return $this->json([
                 'User successfully created',
                 'user' =>  $user,
-            ]);
+            ], 200, [], ['groups' => ['user_read']]);
     }
 
     /**
@@ -123,7 +123,7 @@ class UserController extends MerosController
             return $this->json([
                 'User successfully updated',
                 'user' =>  $user,
-            ]);
+            ], 200, [], ['groups' => ['user_read']]);
 
     }
 }
