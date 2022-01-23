@@ -188,7 +188,7 @@ class EntityGenerator
 
         $booking = new Booking;
 
-        $startDate = $generator->dateTimeThisYear();
+        $startDate = $generator->dateTimeBetween('-2 weeks','+1 weeks');
 
         $intervalInHour = rand(1,10);
 

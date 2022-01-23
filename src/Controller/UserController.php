@@ -10,16 +10,20 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
+use App\Repository\BookingRepository;
 
 class UserController extends MerosController
 {
     private UserRepository $repository;
+    private BookingRepository $bookingRepository;
 
     function __construct(UserRepository $repository,
-                         EntityManagerInterface $em,
-                         ValidatorInterface $validator){
+                        BookingRepository $bookingRepository,
+                        EntityManagerInterface $em,
+                        ValidatorInterface $validator){
        parent::__construct($em, $validator);
        $this->repository = $repository;
+       $this->bookingRepository = $bookingRepository;
     }
 
     /**
@@ -30,11 +34,23 @@ class UserController extends MerosController
         $users = $this->repository->findOneOrAll($id);
 
         if(!$users) return $this->json(
-             $id ? 'Cannot find user with this id' : 'Cannot find users'
+            $id ? 'Cannot find user with this id' : 'Cannot find users'
             ,404
         );
 
         return $this->json($users, 200, [], ['groups' => ['user_read']]);
+    }
+
+    /**
+     * @Route("/users/{id}/bookings", name="app_users_bookings_get", methods={"GET"})
+     */
+    function findBookings(int $id ): Response
+    {
+        $user = $this->repository->find($id);
+
+        if(!$user) return $this->json('Cannot find user with this id',404);
+
+        return $this->json($user->getBookings(), 200, [], ['groups' => ['user_read']]);
     }
 
     /**

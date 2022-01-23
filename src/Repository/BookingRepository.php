@@ -31,7 +31,7 @@ class BookingRepository extends ServiceEntityRepository
             ->getResult()
             ;
     }
-
+    
     /*public function getForUser(User $user){
         return $this->createQueryBuilder('b')
             ->andWhere('b.users = :val')
