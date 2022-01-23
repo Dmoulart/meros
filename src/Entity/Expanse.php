@@ -7,6 +7,7 @@ use App\Repository\ExpanseRepository;
 use Doctrine\ORM\Mapping as ORM;
 use JMS\Serializer\Annotation as Serializer;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=ExpanseRepository::class)
  */
@@ -16,6 +17,7 @@ class Expanse
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
+     * @Groups({"booking_read"})
      */
     private $id;
 
@@ -24,7 +26,7 @@ class Expanse
      * @Assert\Positive(
      *     message="Le montant de la dépense doit être supérieur à 0."
      * )
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $amount;
 
@@ -36,7 +38,7 @@ class Expanse
      *      minMessage = "La raison de la dépense ne peut pas compter moins de 1 caractère.",
      *      maxMessage = "La raison de la dépense ne peut pas compter plus de 40 caractères."
      * )
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $reason;
 
@@ -46,25 +48,25 @@ class Expanse
      *      max = 400,
      *      maxMessage = "La raison de la dépense ne peut pas compter plus de 400 caractères."
      * )
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $details;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $isSettled;
 
     /**
      * @ORM\Column(type="json", nullable=true)
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $documents = [];
 
     /**
      * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="expanses", fetch="EAGER")
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $vehicle;
 

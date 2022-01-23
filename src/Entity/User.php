@@ -11,10 +11,10 @@ use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
 use Symfony\Component\Serializer\Annotation\Ignore;
 use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Component\Serializer\Annotation\Groups;
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="`user`")
- * @Serializer\ExclusionPolicy("ALL")
  */
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
@@ -22,7 +22,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $id;
 
@@ -35,14 +35,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      * @Assert\Email(
      *     message = "L'email '{{ value }}' n'est pas valide."
      * )
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $email;
 
     /**
      * @ORM\Column(type="json")
      * @Assert\NotBlank
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $roles = ["ROLE_USER"];
 
@@ -56,6 +56,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      maxMessage = "Votre mot de passe ne peut pas compter plus de 150 caractères."
      * )
      * @ORM\Column(type="string")
+     * @Ignore()
      */
     private $password;
 
@@ -71,7 +72,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *     message="Un utilisateur doit avoir un nom."
      * )
      * @Assert\NotBlank
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $names;
 
@@ -83,27 +84,27 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      *      minMessage = "Votre pseudonyme doit compter 3 caractères au minimum.",
      *      maxMessage = "Votre pseudonyme ne peut pas compter plus de 40 caractères."
      * )
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $pseudo;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $share;
 
     /**
      * @ORM\Column(type="integer")
      * @Assert\NotBlank
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $estimatedMileage;
 
     /**
      * @ORM\Column(type="integer", nullable=true)
-     * @Serializer\Expose
+     * @Groups({"booking_read"})
      */
     private $currentMileage;
 

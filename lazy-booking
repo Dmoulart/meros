@@ -12,6 +12,7 @@ use JMS\Serializer\Annotation as Serializer;
 use JMS\Serializer\Annotation\Accessor;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Annotation\Ignore;
+use Symfony\Component\Serializer\Annotation\MaxDepth;
 use Symfony\Component\Serializer\Annotation\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
@@ -27,7 +28,7 @@ class Booking
      * @ORM\Id
      * @ORM\GeneratedValue
      * @ORM\Column(type="integer")
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $id;
 
@@ -37,13 +38,13 @@ class Booking
      *      max = 400,
      *      maxMessage = "Les informations de la réservations ne peuvent excéder 400 caractères."
      * )
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $informations;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $isOpen;
 
@@ -52,7 +53,7 @@ class Booking
      * @Assert\NotNull(
      *     message="La date de départ doit respecter le format 'Année-Mois-Jour Heure:Minutes:Secondes'."
      * )
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $startDate;
 
@@ -61,7 +62,7 @@ class Booking
      * @Assert\NotNull(
      *     message="La date d'arrivée doit respecter le format 'Année-Mois-Jour Heure:Minutes:Secondes'."
      * )
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $endDate;
 
@@ -70,7 +71,7 @@ class Booking
      * @Assert\PositiveOrZero(
      *     message="Le kilométrage de début de réservation ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $startMileage;
 
@@ -79,26 +80,29 @@ class Booking
      * @Assert\PositiveOrZero(
      *     message="Le kilométrage de fin de réservation ne peut être inférieur à 0."
      * )
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $endMileage;
 
     /**
      * @ORM\Column(type="boolean")
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
      */
     private $isCompleted;
 
-
     /**
      * @ORM\ManyToOne(targetEntity=Vehicle::class, inversedBy="bookings")
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
+     * @Accessor(getter="getVehicleId")
+     * @Ignore
      */
     private $vehicle;
 
     /**
      * @ORM\ManyToMany(targetEntity=User::class, inversedBy="bookings")
-     * @Groups({"booking_read"})
+     * @Serializer\Expose
+     * @Accessor(getter="getUsersId")
+     * @Ignore
      */
     private $users;
 
@@ -222,10 +226,10 @@ class Booking
         return $this;
     }
 
-    // public function getVehicleId(): ?int
-    // {
-    //     return $this->vehicle->getId() ?? null;
-    // }
+    public function getVehicleId(): ?int
+    {
+        return $this->vehicle->getId() ?? null;
+    }
     /**
      * @return Collection|User[]
      */
@@ -234,15 +238,15 @@ class Booking
         return $this->users;
     }
 
-    // /**
-    //  * @return array
-    //  */
-    // public function getUsersId(): array
-    // {
-    //     return $this->users->map(function($user){
-    //         return $user->getId();
-    //     })->toArray();
-    // }
+    /**
+     * @return array
+     */
+    public function getUsersId(): array
+    {
+        return $this->users->map(function($user){
+            return $user->getId();
+        })->toArray();
+    }
 
     public function addUser(User $user): self
     {

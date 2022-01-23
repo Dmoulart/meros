@@ -15,6 +15,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 use Knp\Component\Pager\PaginatorInterface;
+use Symfony\Component\Serializer\Normalizer\AbstractObjectNormalizer;
 
 class BookingController extends MerosController
 {
@@ -51,12 +52,12 @@ class BookingController extends MerosController
         $response = $this->paginator->paginate(
             $bookings, 
             $page, 
-            10
+            5
         );
 
         if(!count($response)) return $this->json('Cannot find bookings', 404);
 
-        return $this->json($response);
+        return $this->json($response, 200, [], ['groups' => ['booking_read']]);
     }
 
     /**
@@ -64,11 +65,11 @@ class BookingController extends MerosController
      */
     function findOne(int $id): Response
     {
-        $bookings = $this->repository->find($id);
+        $booking = $this->repository->find($id);
 
-        if(!$bookings) return $this->json('Cannot find booking with this id',404);
+        if(!$booking) return $this->json('Cannot find booking with this id',404);
 
-        return $this->json($bookings);
+        return $this->json($booking, 200, [], ['groups' => ['booking_read']]);
     }
 
     /**
@@ -90,7 +91,7 @@ class BookingController extends MerosController
         return $this->json([
             $id ? 'Booking successfully deleted' : 'Bookings successfully deleted',
             "bookings" => $deletedVehicles
-        ]);
+        ], 200, [], ['groups' => ['booking_read']]);
     }
 
     /**
@@ -147,7 +148,7 @@ class BookingController extends MerosController
             return $this->json([
                 'Booking successfully created',
                 'booking' =>  $booking,
-            ]);
+            ], 200, [], ['groups' => ['booking_read']]);
     }
 
     /**
@@ -208,7 +209,7 @@ class BookingController extends MerosController
         return $this->json([
             'Booking successfully updated',
             'booking' =>  $booking,
-        ]);
+        ], 200, [], ['groups' => ['booking_read']]);
     }
 
     /**

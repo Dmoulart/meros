@@ -18,6 +18,7 @@ framework:
         log: true
 
     serializer:
+        enable_annotations: true
         circular_reference_handler: 'App\Serializer\CircularReferenceHandler'
 
 when@test:
